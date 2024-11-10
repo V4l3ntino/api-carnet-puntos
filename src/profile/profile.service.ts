@@ -24,7 +24,7 @@ export class ProfileService {
       }
       const profile = this.pRepository.create(createProfileDto);
       profile.user = user
-      profile.ida = `${user.id}_${user.username}`
+      profile.ida = `${user.id}`
       await this.pRepository.save(profile);
       
       return newMessage('Profile created',200)

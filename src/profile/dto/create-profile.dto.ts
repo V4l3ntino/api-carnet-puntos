@@ -6,8 +6,8 @@ export class CreateProfileDto {
     fullName: string;
     @IsString()
     avatar?: string;
-    @IsEmail()
+    @IsString()
     email: string;
-    @IsNumberString()
-    userId: number;
+    @IsString()
+    userId: string;
 }

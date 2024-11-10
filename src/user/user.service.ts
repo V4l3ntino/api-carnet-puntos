@@ -5,7 +5,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { newMessage } from 'functions/functions';
-
+import { v4 as uuidv4 } from 'uuid';
+import { CreateProfileDto } from 'src/profile/dto/create-profile.dto';
 @Injectable()
 export class UserService {
 
@@ -17,8 +18,23 @@ export class UserService {
   async create(createUserDto: CreateUserDto) {
 
     try {
-      await this.uRepository.save(createUserDto);
-      
+      const user = this.uRepository.create(createUserDto)
+      user.id = uuidv4()
+      await this.uRepository.save(user);
+      const profile:CreateProfileDto = {
+        avatar: "",
+        email: "",
+        fullName: "",
+        userId: user.id
+      }
+      const request = await fetch("http://localhost:3000/api/profile/",{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'  
+        },
+        body: JSON.stringify(profile)
+      })
+
       return newMessage('User created', 200);
 
     } catch (error) {
@@ -34,7 +50,7 @@ export class UserService {
     return await this.uRepository.find();
   }
 
-  async findOne(id: number): Promise<User> {
+  async findOne(id: string): Promise<User> {
     try {
       const user = await this.uRepository.findOneBy({ id });
       if (!user) {
@@ -51,7 +67,7 @@ export class UserService {
     }
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto) {
     try {
       const user = await this.uRepository.findOneBy({ id });
       if (!user) {
@@ -71,7 +87,7 @@ export class UserService {
 
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     try {
       const user = await this.uRepository.findOneBy({ id });
       if(!user){

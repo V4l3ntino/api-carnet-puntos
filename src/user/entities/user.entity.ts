@@ -1,11 +1,11 @@
 import { Profile } from "src/profile/entities/profile.entity";
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('User')
 export class User {
     
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryColumn()
+    id: string;
 
     @Column({length: 15, unique: true})
     username: string;
