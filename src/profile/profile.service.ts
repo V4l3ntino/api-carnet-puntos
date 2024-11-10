@@ -25,12 +25,15 @@ export class ProfileService {
       const profile = this.pRepository.create(createProfileDto);
       profile.user = user
       profile.ida = `${user.id}_${user.username}`
-      this.pRepository.save(profile);
+      await this.pRepository.save(profile);
       
       return newMessage('Profile created',200)
     } catch (error) {
       if(error instanceof NotFoundException){
         throw error
+      }
+      if(error.code == 23505){
+        return newMessage('Email already exists', 500)
       }
       throw new InternalServerErrorException("Error creating profile")
     }
