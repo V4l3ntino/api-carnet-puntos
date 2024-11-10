@@ -3,9 +3,19 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ProfesorModule } from './profesor/profesor.module';
-import { AlumnoModule } from './alumno/alumno.module';
-import { PerfilModule } from './perfil/perfil.module';
+import { UserModule } from './user/user.module';
+import { CuentaPuntosModule } from './cuenta_puntos/cuenta_puntos.module';
+import { TablasModule } from './tablas/tablas.module';
+import { GradoModule } from './grado/grado.module';
+import { ProfileModule } from './profile/profile.module';
+import { AlumnoProfileModule } from './alumno_profile/alumno_profile.module';
+import { ProfesorProfileModule } from './profesor_profile/profesor_profile.module';
+import { AdminProfileModule } from './admin_profile/admin_profile.module';
+import { GrupoModule } from './grupo/grupo.module';
+import { IncidenciaModule } from './incidencia/incidencia.module';
+import { TipoIncidenciaModule } from './tipo_incidencia/tipo_incidencia.module';
+import { RetrasosModule } from './retrasos/retrasos.module';
+import { PermisosModule } from './permisos/permisos.module';
 
 @Module({
   imports: [
@@ -20,9 +30,19 @@ import { PerfilModule } from './perfil/perfil.module';
       autoLoadEntities: true,
       synchronize: true
     }),
-    ProfesorModule,
-    AlumnoModule,
-    PerfilModule
+    UserModule,
+    CuentaPuntosModule,
+    TablasModule,
+    GradoModule,
+    ProfileModule,
+    AlumnoProfileModule,
+    ProfesorProfileModule,
+    AdminProfileModule,
+    GrupoModule,
+    IncidenciaModule,
+    TipoIncidenciaModule,
+    RetrasosModule,
+    PermisosModule
   ],
   controllers: [AppController],
   providers: [AppService],
