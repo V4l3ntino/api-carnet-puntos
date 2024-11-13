@@ -1,3 +1,4 @@
+import { AdminProfile } from "src/admin_profile/entities/admin_profile.entity";
 import { Profile } from "src/profile/entities/profile.entity";
 import { Column, Entity, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
@@ -9,12 +10,15 @@ export class User {
 
     @Column({length: 15, unique: true})
     username: string;
-    @Column({length: 30})
+    @Column()
     password: string;
     @Column()
     created_at: string
 
     @OneToOne(() => Profile, (profile) => profile.user)
     profile: Profile
+
+    @OneToOne(() => AdminProfile, (adminProfile) => adminProfile.user)
+    adminProfile: AdminProfile
 
 }

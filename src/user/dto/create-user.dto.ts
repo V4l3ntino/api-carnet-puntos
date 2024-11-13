@@ -8,7 +8,4 @@ export class CreateUserDto {
     @IsStrongPassword()
     password: string;
 
-    @IsDateString()
-    created_at: string
-
 }

@@ -1,13 +1,19 @@
-import { IsEmail, IsNumberString, IsString } from "class-validator";
+import { IsEmail, IsNumberString, IsOptional, IsString } from "class-validator";
 
 export class CreateProfileDto {
 
     @IsString()
-    fullName: string;
+    @IsOptional()
+    fullName?: string;
+
     @IsString()
+    @IsOptional()
     avatar?: string;
-    @IsString()
-    email: string;
+
+    @IsEmail()
+    @IsOptional()
+    email?: string;
+
     @IsString()
     userId: string;
 }

@@ -6,14 +6,14 @@ export class Profile {
     @PrimaryColumn()
     ida: string;
 
-    @Column({length: 30})
-    fullName: string;
+    @Column({length: 30, nullable: true, default: null})
+    fullName?: string;
     
-    @Column()
-    avatar: string;
+    @Column({nullable: true, default: null})
+    avatar?: string;
 
-    @Column({unique: true})
-    email: string;
+    @Column({unique: true, nullable: true, default: null})
+    email?: string;
 
     @OneToOne(() => User, {onDelete: 'CASCADE'})
     @JoinColumn()
