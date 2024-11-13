@@ -76,6 +76,15 @@ export class UserService {
     }
   }
 
+  async findOneByUsername(username: string): Promise<User>{
+    try {
+      const user = await this.uRepository.findOneBy({username})
+      return user
+    } catch (error) {
+      throw new InternalServerErrorException("Error to find user by username")
+    }
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto) {
     try {
       const user = await this.uRepository.findOneBy({ id });
@@ -114,16 +123,6 @@ export class UserService {
   }
 
   async login(username: string, loginUserDto:LoginUserDto){
-    try {
-      const user = await this.uRepository.findOneBy({username})
-      if(user){
-        if(await veryPassword(loginUserDto.password,user.password)){
-          return newMessage("True", 200)
-        }
-      }
-      return newMessage("False", 401)
-    } catch (error) {
-      console.log(error)
-    }
+    
   }
 }

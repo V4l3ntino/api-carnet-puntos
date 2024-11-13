@@ -13,11 +13,6 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Post('/verify')
-  verify(@Body() loginUserDto:LoginUserDto){
-    return this.userService.login(loginUserDto.username,loginUserDto)
-  }
-
   @Get()
   findAll() {
     return this.userService.findAll();

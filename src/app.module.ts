@@ -16,6 +16,7 @@ import { IncidenciaModule } from './incidencia/incidencia.module';
 import { TipoIncidenciaModule } from './tipo_incidencia/tipo_incidencia.module';
 import { RetrasosModule } from './retrasos/retrasos.module';
 import { PermisosModule } from './permisos/permisos.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -42,7 +43,8 @@ import { PermisosModule } from './permisos/permisos.module';
     IncidenciaModule,
     TipoIncidenciaModule,
     RetrasosModule,
-    PermisosModule
+    PermisosModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
