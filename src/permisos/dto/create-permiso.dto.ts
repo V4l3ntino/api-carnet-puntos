@@ -12,4 +12,7 @@ export class CreatePermisoDto {
     insert: boolean;
     @IsBoolean()
     delete: boolean;
+    
+    @IsString()
+    admin_profile_id: string;
 }

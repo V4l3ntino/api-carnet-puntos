@@ -11,10 +11,9 @@ export class AdminProfile {
 
     @OneToOne(() => User, {onDelete: 'CASCADE'})
     @JoinColumn()
-    user: string;
+    user: User;
 
-    @OneToOne(() => Permiso)
-    @JoinColumn()
+    @OneToOne(() => Permiso, (permiso) => permiso.admin_profile)
     permiso: Permiso
 
 }

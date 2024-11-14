@@ -1,5 +1,5 @@
 import { AdminProfile } from "src/admin_profile/entities/admin_profile.entity";
-import { Column, Entity, OneToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
 
 @Entity('Permisos')
 export class Permiso {
@@ -14,6 +14,7 @@ export class Permiso {
     @Column()
     delete: boolean;
 
-    @OneToOne(() => AdminProfile, (adminProfile) => adminProfile.permiso)
-    adminProfile: AdminProfile
+    @OneToOne(() => AdminProfile, {onDelete: 'CASCADE'})
+    @JoinColumn()
+    admin_profile: AdminProfile
 }

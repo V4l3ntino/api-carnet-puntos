@@ -19,7 +19,7 @@ export class AdminProfileController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.adminProfileService.findOne(+id);
+    return this.adminProfileService.findOne(id);
   }
 
   @Patch(':id')
@@ -29,6 +29,6 @@ export class AdminProfileController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.adminProfileService.remove(+id);
+    return this.adminProfileService.remove(id);
   }
 }

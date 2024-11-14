@@ -19,7 +19,7 @@ export class PermisosController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.permisosService.findOne(+id);
+    return this.permisosService.findOne(id);
   }
 
   @Patch(':id')
@@ -29,6 +29,6 @@ export class PermisosController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.permisosService.remove(+id);
+    return this.permisosService.remove(id);
   }
 }

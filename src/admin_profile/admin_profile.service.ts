@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException, NotImplementedException } from '@nestjs/common';
 import { CreateAdminProfileDto } from './dto/create-admin_profile.dto';
 import { UpdateAdminProfileDto } from './dto/update-admin_profile.dto';
 import { Repository } from 'typeorm';
@@ -17,45 +17,49 @@ export class AdminProfileService {
   constructor(
     @InjectRepository(AdminProfile)
     private readonly adminService: Repository<AdminProfile>,
-    private readonly uService: UserService,
-    private readonly permService: PermisosService
-    ){}
+    private readonly uService: UserService    ){}
 
   async create(createAdminProfileDto: CreateAdminProfileDto) {
     try {
-      const user = await this.uService.findOne(createAdminProfileDto.user)
+      const user = await this.uService.findOne(createAdminProfileDto.user_id)
       if(!user){
         throw new NotFoundException("User not found")
       }
+
+      const fechaActual = new Date();
+      const fechaFormateada = format(fechaActual, "yyyy-MM-dd'T'HH:mm");
+
+      const adminProfile: AdminProfile = new AdminProfile()
+      adminProfile.created_at = fechaFormateada
+      adminProfile.idea = user.id
+      adminProfile.user = user
+      this.adminService.save(adminProfile);
 
       const permisos: CreatePermisoDto = {
         id: user.id,
         delete: true,
         insert: true,
         read: true, 
-        write: true
+        write: true,
+        admin_profile_id: user.id
       }
-      const perm = this.permService.create(permisos)
+      
 
-      // const request = await fetch('http://localhost:3000/api/profile/', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json'  
-      //   },
-      //   body: JSON.stringify(permisos)
-      // })
+      const request = await fetch('http://localhost:3000/api/permisos/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'  
+        },
+        body: JSON.stringify(permisos)
+      })
 
-      // const requestData = await request.json()
-      // console.log(requestData)
+      const requestData = await request.json()
+      console.log(requestData)
+      if (requestData.status !== 200){
+        throw new NotImplementedException()
+      }
+      
 
-      const fechaActual = new Date();
-      const fechaFormateada = format(fechaActual, "yyyy-MM-dd'T'HH:mm");
-
-      const adminProfile = this.adminService.create(createAdminProfileDto)
-      adminProfile.created_at = fechaFormateada
-      adminProfile.idea = user.id
-      adminProfile.permiso = perm
-      this.adminService.save(adminProfile);
       return newMessage("The user is now an administrator", 200)
     } catch (error) {
       if(error instanceof NotFoundException){
@@ -74,15 +78,15 @@ export class AdminProfileService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} adminProfile`;
+  findOne(idea: string) {
+    return this.adminService.findOne({where: {idea}, relations: ['user', 'permiso']})
   }
 
   update(id: number, updateAdminProfileDto: UpdateAdminProfileDto) {
     return `This action updates a #${id} adminProfile`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} adminProfile`;
+  remove(id: string) {
+    return this.adminService.delete(id);
   }
 }
