@@ -52,7 +52,7 @@ export class UserService {
 
   async findAll(): Promise<User[]> {
     try {
-      return await this.uRepository.find({relations: ['profile','adminProfile']})
+      return await this.uRepository.find({relations: ['profile','adminProfile', 'adminProfile.permiso', 'adminProfile.permiso.tabla']})
     } catch (error) {
       console.log(error)
       throw new InternalServerErrorException("Erro to find all users")
@@ -110,6 +110,11 @@ export class UserService {
       const user = await this.uRepository.findOneBy({ id });
       if(!user){
         throw new NotFoundException('User not found');
+      }
+      const request = await fetch(`http://localhost:3000/api/admin-profile/${id}`,{method: 'DELETE'})
+      const requestData = await request.json()
+      if(requestData.status !== 200){
+        throw new Error("Admin profile could not be deleted so we cant delete user account")
       }
       await this.uRepository.delete(id);
       return newMessage('User deleted', 200);

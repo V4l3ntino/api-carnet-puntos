@@ -13,7 +13,8 @@ export class AdminProfile {
     @JoinColumn()
     user: User;
 
-    @OneToOne(() => Permiso, (permiso) => permiso.admin_profile)
+    @OneToOne(() => Permiso)
+    @JoinColumn()
     permiso: Permiso
 
 }

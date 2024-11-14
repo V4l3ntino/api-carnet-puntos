@@ -10,6 +10,7 @@ import { PermisosModule } from 'src/permisos/permisos.module';
   imports: [
     TypeOrmModule.forFeature([AdminProfile]),
     UserModule,
+    PermisosModule
   ],
   controllers: [AdminProfileController],
   providers: [AdminProfileService],

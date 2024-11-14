@@ -1,26 +1,49 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTablaDto } from './dto/create-tabla.dto';
 import { UpdateTablaDto } from './dto/update-tabla.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Tabla } from './entities/tabla.entity';
+import { Repository } from 'typeorm';
+import { PermisosService } from 'src/permisos/permisos.service';
+import { newMessage } from 'functions/functions';
 
 @Injectable()
 export class TablasService {
-  create(createTablaDto: CreateTablaDto) {
-    return 'This action adds a new tabla';
+
+  constructor(
+    @InjectRepository(Tabla)
+    private readonly tablaRepository: Repository<Tabla>,
+    private readonly permisoService: PermisosService
+  ){}
+
+  async create(createTablaDto: CreateTablaDto) {
+    try {
+      const permiso = await this.permisoService.findOne(createTablaDto.permiso_id)
+      if(!permiso){
+        throw new NotFoundException()
+      }
+      const tabla = this.tablaRepository.create(createTablaDto)
+      tabla.permiso = permiso
+      this.tablaRepository.save(tabla)
+      return newMessage("success", 200)
+    } catch (error) {
+      throw error
+    }
   }
 
   findAll() {
-    return `This action returns all tablas`;
+    return this.tablaRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} tabla`;
+  findOne(id: string) {
+    return this.tablaRepository.findOneBy({id});
   }
 
-  update(id: number, updateTablaDto: UpdateTablaDto) {
+  update(id: string, updateTablaDto: UpdateTablaDto) {
     return `This action updates a #${id} tabla`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} tabla`;
+  remove(id: string) {
+    return this.tablaRepository.delete(id)
   }
 }

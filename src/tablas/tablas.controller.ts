@@ -19,16 +19,16 @@ export class TablasController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.tablasService.findOne(+id);
+    return this.tablasService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTablaDto: UpdateTablaDto) {
-    return this.tablasService.update(+id, updateTablaDto);
+    return this.tablasService.update(id, updateTablaDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.tablasService.remove(+id);
+    return this.tablasService.remove(id);
   }
 }

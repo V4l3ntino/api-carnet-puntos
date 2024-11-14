@@ -7,8 +7,7 @@ import { AdminProfileModule } from 'src/admin_profile/admin_profile.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Permiso]),
-    AdminProfileModule
+    TypeOrmModule.forFeature([Permiso])
   ],
   controllers: [PermisosController],
   providers: [PermisosService],
