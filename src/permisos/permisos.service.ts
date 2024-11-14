@@ -1,11 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { CreatePermisoDto } from './dto/create-permiso.dto';
 import { UpdatePermisoDto } from './dto/update-permiso.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Permiso } from './entities/permiso.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PermisosService {
+  
+  constructor(
+    @InjectRepository(Permiso)
+    private readonly permService: Repository<Permiso> 
+  ){}
+  
   create(createPermisoDto: CreatePermisoDto) {
-    return 'This action adds a new permiso';
+    const perm = this.permService.create(createPermisoDto)
+    try {
+      this.permService.save(createPermisoDto)
+      return perm;
+    } catch (error) {
+      throw error
+    }
   }
 
   findAll() {

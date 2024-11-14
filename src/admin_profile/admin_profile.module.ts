@@ -4,11 +4,13 @@ import { AdminProfileController } from './admin_profile.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from 'src/user/user.module';
 import { AdminProfile } from './entities/admin_profile.entity';
+import { PermisosModule } from 'src/permisos/permisos.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([AdminProfile]),
-    UserModule
+    UserModule,
+    PermisosModule
   ],
   controllers: [AdminProfileController],
   providers: [AdminProfileService],

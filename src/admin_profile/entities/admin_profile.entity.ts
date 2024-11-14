@@ -1,3 +1,4 @@
+import { Permiso } from "src/permisos/entities/permiso.entity";
 import { User } from "src/user/entities/user.entity";
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
 
@@ -11,5 +12,9 @@ export class AdminProfile {
     @OneToOne(() => User, {onDelete: 'CASCADE'})
     @JoinColumn()
     user: string;
+
+    @OneToOne(() => Permiso)
+    @JoinColumn()
+    permiso: Permiso
 
 }

@@ -78,7 +78,7 @@ export class UserService {
 
   async findOneByUsername(username: string): Promise<User>{
     try {
-      const user = await this.uRepository.findOneBy({username})
+      const user = await this.uRepository.findOne({where: {username}, relations: ['profile', 'adminProfile', 'adminProfile.permiso']} )
       return user
     } catch (error) {
       throw new InternalServerErrorException("Error to find user by username")

@@ -20,10 +20,11 @@ export class AuthService {
                 throw new UnauthorizedException()
             }
             if(await veryPassword(loginUserDto.password,user.password)){
-
+                const permisos = user.adminProfile?.permiso
                 const tokenPayload = {
                     sub: user.id,
-                    username: user.username
+                    username: user.username,
+                    permisos: permisos
                 }
                 const accessToken = await this.jwtService.signAsync(tokenPayload);
 
