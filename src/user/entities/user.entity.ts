@@ -1,5 +1,6 @@
 import { AdminProfile } from "src/admin_profile/entities/admin_profile.entity";
 import { AlumnoProfile } from "src/alumno_profile/entities/alumno_profile.entity";
+import { Grado } from "src/grado/entities/grado.entity";
 import { Grupo } from "src/grupo/entities/grupo.entity";
 import { ProfesorProfile } from "src/profesor_profile/entities/profesor_profile.entity";
 import { Profile } from "src/profile/entities/profile.entity";
@@ -32,5 +33,8 @@ export class User {
 
     @OneToMany(() => Grupo, (grupo) => grupo.user)
     grupo: Grupo
+
+    @OneToMany(() => Grado, (grado) => grado.user)
+    grado: Grado
 
 }
