@@ -46,7 +46,7 @@ export class PermisosService {
   }
 
   findOne(id: string) {
-    return this.permRepository.findOne({where: {id}, relations: ['admin_profile']})
+    return this.permRepository.findOne({where: {id}, relations: ['admin_profile', 'profesor_profile']})
   }
 
   update(id: number, updatePermisoDto: UpdatePermisoDto) {

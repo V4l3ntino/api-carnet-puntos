@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcryptjs';
+import { format } from 'date-fns';
 import { CreateTablaDto } from 'src/tablas/dto/create-tabla.dto';
 
 
@@ -39,4 +40,9 @@ export const createTables = async (tabla: CreateTablaDto) => {
     body: JSON.stringify(tabla)
   })
   return await request.json()
+}
+
+export const getDateNow = ( ) => {
+  const fechaActual = new Date();
+  return format(fechaActual, "yyyy-MM-dd'T'HH:mm");
 }

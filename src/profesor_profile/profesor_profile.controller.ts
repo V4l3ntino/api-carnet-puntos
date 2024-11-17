@@ -19,16 +19,16 @@ export class ProfesorProfileController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.profesorProfileService.findOne(+id);
+    return this.profesorProfileService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateProfesorProfileDto: UpdateProfesorProfileDto) {
-    return this.profesorProfileService.update(+id, updateProfesorProfileDto);
+    return this.profesorProfileService.update(id, updateProfesorProfileDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.profesorProfileService.remove(+id);
+    return this.profesorProfileService.remove(id);
   }
 }

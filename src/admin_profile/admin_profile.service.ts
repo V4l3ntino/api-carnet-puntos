@@ -5,11 +5,12 @@ import { Repository } from 'typeorm';
 import { AdminProfile } from './entities/admin_profile.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/user/user.service';
-import { newMessage } from 'functions/functions';
+import { getDateNow, newMessage } from 'functions/functions';
 import { format } from 'date-fns';
 import { Permiso } from 'src/permisos/entities/permiso.entity';
 import { CreatePermisoDto } from 'src/permisos/dto/create-permiso.dto';
 import { PermisosService } from 'src/permisos/permisos.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class AdminProfileService {
@@ -27,8 +28,12 @@ export class AdminProfileService {
       if(!user){
         throw new NotFoundException("User not found")
       }
+      if( user.profesorProfile !== null ){
+        throw new NotImplementedException("The user account is a profesor profile, we cant make him an administrator")
+      }
+      const uuid = uuidv4()
       const permisos: CreatePermisoDto = {
-        id: user.id,
+        id: uuid,
         tablas: [
           {
             tipo: "r",
@@ -38,7 +43,7 @@ export class AdminProfileService {
             grado: true,
             grupo: true,
             incidencia: true,
-            permiso_id: user.id,
+            permiso_id: uuid,
             permisos: true,
             profesor_profile: true,
             profile: true,
@@ -55,7 +60,7 @@ export class AdminProfileService {
             grado: true,
             grupo: true,
             incidencia: true,
-            permiso_id: user.id,
+            permiso_id: uuid,
             permisos: true,
             profesor_profile: true,
             profile: true,
@@ -72,7 +77,7 @@ export class AdminProfileService {
             grado: true,
             grupo: true,
             incidencia: true,
-            permiso_id: user.id,
+            permiso_id: uuid,
             permisos: true,
             profesor_profile: true,
             profile: true,
@@ -89,7 +94,7 @@ export class AdminProfileService {
             grado: true,
             grupo: true,
             incidencia: true,
-            permiso_id: user.id,
+            permiso_id: uuid,
             permisos: true,
             profesor_profile: true,
             profile: true,
@@ -102,11 +107,8 @@ export class AdminProfileService {
       }
       const permiso = await this.permService.create(permisos)
 
-      const fechaActual = new Date();
-      const fechaFormateada = format(fechaActual, "yyyy-MM-dd'T'HH:mm");
-
       const adminProfile: AdminProfile = new AdminProfile()
-      adminProfile.created_at = fechaFormateada
+      adminProfile.created_at = getDateNow()
       adminProfile.idea = user.id
       adminProfile.user = user
       adminProfile.permiso = permiso
@@ -116,6 +118,9 @@ export class AdminProfileService {
       return newMessage("The user is now an administrator", 200)
     } catch (error) {
       if(error instanceof NotFoundException){
+        throw error
+      }
+      if(error instanceof NotImplementedException){
         throw error
       }
       console.log(error)
@@ -132,17 +137,19 @@ export class AdminProfileService {
   }
 
   findOne(idea: string) {
-    return this.adminRepository.findOne({where: {idea}, relations: ['user', 'permiso']})
+    return this.adminRepository.findOne({where: {idea}, relations: ['user', 'permiso', 'permiso.tabla']})
   }
 
   update(id: number, updateAdminProfileDto: UpdateAdminProfileDto) {
     return `This action updates a #${id} adminProfile`;
   }
 
-  async remove(id: string) {
+  async remove(idea: string) {
     try {
-      await this.adminRepository.delete(id);
-      await this.permService.remove(id)
+      const adminProfile = await this.adminRepository.findOne({where: {idea}, relations: ['permiso']})
+
+      await this.adminRepository.delete(idea);
+      await this.permService.remove(adminProfile.permiso.id)
       return newMessage("success", 200)
     } catch (error) {
       throw error

@@ -52,7 +52,15 @@ export class UserService {
 
   async findAll(): Promise<User[]> {
     try {
-      return await this.uRepository.find({relations: ['profile','adminProfile', 'adminProfile.permiso', 'adminProfile.permiso.tabla']})
+      return await this.uRepository.find({relations: [
+        'profile', 
+        'adminProfile', 
+        'adminProfile.permiso', 
+        'adminProfile.permiso.tabla',
+        'profesorProfile',
+        'profesorProfile.permiso',
+        'profesorProfile.permiso.tabla'
+      ]})
     } catch (error) {
       console.log(error)
       throw new InternalServerErrorException("Erro to find all users")
@@ -61,7 +69,7 @@ export class UserService {
 
   async findOne(id: string): Promise<User> {
     try {
-      const user = await this.uRepository.findOneBy({ id });
+      const user = await this.uRepository.findOne({where:{ id }, relations: ['adminProfile', 'profesorProfile']});
       if (!user) {
         throw new NotFoundException('User not found');
       }
@@ -78,7 +86,16 @@ export class UserService {
 
   async findOneByUsername(username: string): Promise<User>{
     try {
-      const user = await this.uRepository.findOne({where: {username}, relations: ['profile', 'adminProfile', 'adminProfile.permiso', 'adminProfile.permiso.tabla']} )
+      const user = await this.uRepository.findOne({where: {username}, relations: [
+        'profile', 
+        'adminProfile', 
+        'adminProfile.permiso', 
+        'adminProfile.permiso.tabla',
+        'profesorProfile',
+        'profesorProfile.permiso',
+        'profesorProfile.permiso.tabla'
+        
+      ]} )
       return user
     } catch (error) {
       throw new InternalServerErrorException("Error to find user by username")
@@ -107,12 +124,20 @@ export class UserService {
 
   async remove(id: string) {
     try {
-      const user = await this.uRepository.findOneBy({ id });
+      const user = await this.uRepository.findOne({where: { id }, relations: ['adminProfile', 'profesorProfile']});
       if(!user){
         throw new NotFoundException('User not found');
       }
-      const request = await fetch(`http://localhost:3000/api/admin-profile/${id}`,{method: 'DELETE'})
+      let tipo = ""
+      if (user.adminProfile != null) {
+        tipo = "admin-profile";
+      } else if (user.profesorProfile != null) {
+        tipo = "profesor-profile";
+      }
+
+      const request = await fetch(`http://localhost:3000/api/${tipo}/${id}`,{method: 'DELETE'})
       const requestData = await request.json()
+      console.log(requestData)
       if(requestData.status !== 200){
         throw new Error("Admin profile could not be deleted so we cant delete user account")
       }
