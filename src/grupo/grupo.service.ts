@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Grupo } from './entities/grupo.entity';
 import { UserService } from 'src/user/user.service';
-import { newMessage } from 'functions/functions';
+import { getDateNow, newMessage } from 'functions/functions';
 
 @Injectable()
 export class GrupoService {
@@ -25,8 +25,10 @@ export class GrupoService {
         throw new NotFoundException("User account not found")
       }
 
-      const grupo = this.gRepository.create(createGrupoDto)
+      const grupo = new Grupo()
+      grupo.nombre = nombre
       grupo.user = user
+      grupo.created_at = getDateNow()
 
       this.gRepository.save(grupo)
 
