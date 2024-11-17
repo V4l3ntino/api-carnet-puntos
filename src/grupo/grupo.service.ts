@@ -42,15 +42,15 @@ export class GrupoService {
     return this.gRepository.find();
   }
 
-  findOne(id: string) {
+  findOne(id: number) {
     return this.gRepository.findOne({where: {id}});
   }
 
-  update(id: string, updateGrupoDto: UpdateGrupoDto) {
+  update(id: number, updateGrupoDto: UpdateGrupoDto) {
     return `This action updates a #${id} grupo`;
   }
 
-  remove(id: string) {
+  remove(id: number) {
     return this.gRepository.delete(id);
   }
 }
