@@ -12,5 +12,6 @@ import { UserModule } from 'src/user/user.module';
   ],
   controllers: [GradoController],
   providers: [GradoService],
+  exports: [GradoService]
 })
 export class GradoModule {}

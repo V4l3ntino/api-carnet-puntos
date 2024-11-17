@@ -1,5 +1,6 @@
+import { TipoIncidencia } from "src/tipo_incidencia/entities/tipo_incidencia.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('Grado')
 export class Grado {
@@ -12,4 +13,7 @@ export class Grado {
 
     @ManyToOne(() => User, (user) => user.grado)
     user: User
+
+    @OneToMany(() => TipoIncidencia, (tipoIncidencia) => tipoIncidencia.grado)
+    tipoIncidencia: TipoIncidencia
 }

@@ -1,15 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, ForbiddenException } from '@nestjs/common';
 import { TipoIncidenciaService } from './tipo_incidencia.service';
 import { CreateTipoIncidenciaDto } from './dto/create-tipo_incidencia.dto';
 import { UpdateTipoIncidenciaDto } from './dto/update-tipo_incidencia.dto';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 @Controller('tipo-incidencia')
 export class TipoIncidenciaController {
   constructor(private readonly tipoIncidenciaService: TipoIncidenciaService) {}
 
   @Post()
-  create(@Body() createTipoIncidenciaDto: CreateTipoIncidenciaDto) {
-    return this.tipoIncidenciaService.create(createTipoIncidenciaDto);
+  @UseGuards(AuthGuard)
+  create(@Body() createTipoIncidenciaDto: CreateTipoIncidenciaDto, @Request() request) {
+    const insert = request.user?.permisos.find((item) => item.tipo == "i")
+
+    if(insert.tipo_incidencia){
+      return this.tipoIncidenciaService.create(createTipoIncidenciaDto);
+    }
+    return new ForbiddenException()
   }
 
   @Get()
