@@ -1,26 +1,54 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGrupoDto } from './dto/create-grupo.dto';
 import { UpdateGrupoDto } from './dto/update-grupo.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Grupo } from './entities/grupo.entity';
+import { UserService } from 'src/user/user.service';
+import { newMessage } from 'functions/functions';
 
 @Injectable()
 export class GrupoService {
-  create(createGrupoDto: CreateGrupoDto) {
-    return 'This action adds a new grupo';
+
+  constructor(
+    @InjectRepository(Grupo)
+    private readonly gRepository: Repository<Grupo>,
+    private readonly uService: UserService
+  ){}
+
+  async create(createGrupoDto: CreateGrupoDto) {
+    try {
+      const {id, nombre} = createGrupoDto
+      const user = await this.uService.findOne(id)
+
+      if(!user){
+        throw new NotFoundException("User account not found")
+      }
+
+      const grupo = this.gRepository.create(createGrupoDto)
+      grupo.user = user
+
+      this.gRepository.save(grupo)
+
+      return newMessage('success', 200)
+    } catch (error) {
+      throw error
+    }
   }
 
   findAll() {
-    return `This action returns all grupo`;
+    return this.gRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} grupo`;
+  findOne(id: string) {
+    return this.gRepository.findOne({where: {id}});
   }
 
-  update(id: number, updateGrupoDto: UpdateGrupoDto) {
+  update(id: string, updateGrupoDto: UpdateGrupoDto) {
     return `This action updates a #${id} grupo`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} grupo`;
+  remove(id: string) {
+    return this.gRepository.delete(id);
   }
 }

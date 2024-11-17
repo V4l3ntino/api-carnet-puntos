@@ -1,15 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request, ForbiddenException } from '@nestjs/common';
 import { GrupoService } from './grupo.service';
 import { CreateGrupoDto } from './dto/create-grupo.dto';
 import { UpdateGrupoDto } from './dto/update-grupo.dto';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { newMessage } from 'functions/functions';
 
 @Controller('grupo')
 export class GrupoController {
   constructor(private readonly grupoService: GrupoService) {}
 
   @Post()
-  create(@Body() createGrupoDto: CreateGrupoDto) {
-    return this.grupoService.create(createGrupoDto);
+  @UseGuards(AuthGuard)
+  create(@Body() createGrupoDto: CreateGrupoDto, @Request() request) {
+    const insert = request.user?.permisos.find((item) => item.tipo == "i")
+    if(insert.grupo){
+      return this.grupoService.create(createGrupoDto);
+    }
+    return new ForbiddenException()
   }
 
   @Get()
@@ -19,16 +26,16 @@ export class GrupoController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.grupoService.findOne(+id);
+    return this.grupoService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateGrupoDto: UpdateGrupoDto) {
-    return this.grupoService.update(+id, updateGrupoDto);
+    return this.grupoService.update(id, updateGrupoDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.grupoService.remove(+id);
+    return this.grupoService.remove(id);
   }
 }
