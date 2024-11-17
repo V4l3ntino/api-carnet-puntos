@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, NotFoundException, NotImplementedException } from '@nestjs/common';
 import { CreateProfesorProfileDto } from './dto/create-profesor_profile.dto';
 import { UpdateProfesorProfileDto } from './dto/update-profesor_profile.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,10 +23,14 @@ export class ProfesorProfileService {
     try {
       const { id, materia, tablas } = createProfesorProfileDto
 
-      const user = await this.userService.findOne(createProfesorProfileDto.id)
+      const user = await this.userService.findOne(id)
 
       if(!user){
         throw new NotFoundException("User not found")
+      }
+
+      if(user.alumnoProfile !== null){
+        throw new NotImplementedException("The user account is a student, we cant make him a profesor profile")
       }
 
       const permisos: CreatePermisoDto = {
@@ -50,6 +54,9 @@ export class ProfesorProfileService {
 
     } catch (error) {
       if(error instanceof NotFoundException){
+        throw error
+      }
+      if(error instanceof NotImplementedException){
         throw error
       }
       console.log(error)

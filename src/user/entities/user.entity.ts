@@ -1,4 +1,5 @@
 import { AdminProfile } from "src/admin_profile/entities/admin_profile.entity";
+import { AlumnoProfile } from "src/alumno_profile/entities/alumno_profile.entity";
 import { ProfesorProfile } from "src/profesor_profile/entities/profesor_profile.entity";
 import { Profile } from "src/profile/entities/profile.entity";
 import { Column, Entity, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
@@ -24,5 +25,8 @@ export class User {
 
     @OneToOne(() => ProfesorProfile, (profesorProfile) => profesorProfile.user)
     profesorProfile: ProfesorProfile
+
+    @OneToOne(() => AlumnoProfile, (alumnoProfile) => alumnoProfile.user)
+    alumnoProfile: AlumnoProfile
 
 }

@@ -6,8 +6,6 @@ import { AdminProfile } from './entities/admin_profile.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/user/user.service';
 import { getDateNow, newMessage } from 'functions/functions';
-import { format } from 'date-fns';
-import { Permiso } from 'src/permisos/entities/permiso.entity';
 import { CreatePermisoDto } from 'src/permisos/dto/create-permiso.dto';
 import { PermisosService } from 'src/permisos/permisos.service';
 import { v4 as uuidv4 } from 'uuid';
@@ -28,8 +26,8 @@ export class AdminProfileService {
       if(!user){
         throw new NotFoundException("User not found")
       }
-      if( user.profesorProfile !== null ){
-        throw new NotImplementedException("The user account is a profesor profile, we cant make him an administrator")
+      if( user.alumnoProfile !== null ){
+        throw new NotImplementedException("The user account is a student, we cant make him an administrator")
       }
       const uuid = uuidv4()
       const permisos: CreatePermisoDto = {

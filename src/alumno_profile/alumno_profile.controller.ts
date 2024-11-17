@@ -19,16 +19,16 @@ export class AlumnoProfileController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.alumnoProfileService.findOne(+id);
+    return this.alumnoProfileService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateAlumnoProfileDto: UpdateAlumnoProfileDto) {
-    return this.alumnoProfileService.update(+id, updateAlumnoProfileDto);
+    return this.alumnoProfileService.update(id, updateAlumnoProfileDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.alumnoProfileService.remove(+id);
+    return this.alumnoProfileService.remove(id);
   }
 }

@@ -24,6 +24,9 @@ export class AuthService {
                 if(permisos == null){
                     permisos = user.profesorProfile?.permiso.tabla
                 }
+                if(permisos == null){
+                    permisos = user.alumnoProfile?.permiso.tabla
+                }
                 const tokenPayload = {
                     sub: user.id,
                     username: user.username,
@@ -34,7 +37,8 @@ export class AuthService {
                 return {
                     accessToken: accessToken,
                     userId: user.id,
-                    username: user.username
+                    username: user.username,
+                    permisos: permisos
                 }
             }
 

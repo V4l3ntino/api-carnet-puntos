@@ -4,7 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { hashPassword, newMessage, veryPassword } from 'functions/functions';
+import { deleteUserAccount, hashPassword, newMessage, veryPassword } from 'functions/functions';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateProfileDto } from 'src/profile/dto/create-profile.dto';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -59,7 +59,10 @@ export class UserService {
         'adminProfile.permiso.tabla',
         'profesorProfile',
         'profesorProfile.permiso',
-        'profesorProfile.permiso.tabla'
+        'profesorProfile.permiso.tabla',
+        'alumnoProfile',
+        'alumnoProfile.permiso',
+        'alumnoProfile.permiso.tabla'
       ]})
     } catch (error) {
       console.log(error)
@@ -69,7 +72,7 @@ export class UserService {
 
   async findOne(id: string): Promise<User> {
     try {
-      const user = await this.uRepository.findOne({where:{ id }, relations: ['adminProfile', 'profesorProfile']});
+      const user = await this.uRepository.findOne({where:{ id }, relations: ['adminProfile', 'profesorProfile', 'alumnoProfile']});
       if (!user) {
         throw new NotFoundException('User not found');
       }
@@ -93,8 +96,10 @@ export class UserService {
         'adminProfile.permiso.tabla',
         'profesorProfile',
         'profesorProfile.permiso',
-        'profesorProfile.permiso.tabla'
-        
+        'profesorProfile.permiso.tabla',
+        'alumnoProfile',
+        'alumnoProfile.permiso',
+        'alumnoProfile.permiso.tabla'        
       ]} )
       return user
     } catch (error) {
@@ -124,19 +129,33 @@ export class UserService {
 
   async remove(id: string) {
     try {
-      const user = await this.uRepository.findOne({where: { id }, relations: ['adminProfile', 'profesorProfile']});
+      const user = await this.uRepository.findOne({where: { id }, relations: ['adminProfile', 'profesorProfile', 'alumnoProfile']});
       if(!user){
         throw new NotFoundException('User not found');
       }
-      let tipo = ""
-      if (user.adminProfile != null) {
-        tipo = "admin-profile";
-      } else if (user.profesorProfile != null) {
-        tipo = "profesor-profile";
+      let requestData: any
+      if (user.adminProfile != null && user.profesorProfile != null){
+        requestData = await deleteUserAccount("profesor-profile", id)
+        requestData = await deleteUserAccount("admin-profile", id)
+      } else {
+        
+        if (user.adminProfile != null) {
+          requestData = await deleteUserAccount("admin-profile", id)
+        } else if (user.profesorProfile != null) {
+          requestData = await deleteUserAccount("profesor-profile", id)
+        }
+        
+      }
+      if (user.alumnoProfile != null){
+        requestData = await deleteUserAccount("alumno-profile", id)
+      } 
+      
+      if (user.adminProfile == null && user.profesorProfile == null && user.alumnoProfile == null){
+        requestData = {
+          status: 200
+        }
       }
 
-      const request = await fetch(`http://localhost:3000/api/${tipo}/${id}`,{method: 'DELETE'})
-      const requestData = await request.json()
       console.log(requestData)
       if(requestData.status !== 200){
         throw new Error("Admin profile could not be deleted so we cant delete user account")

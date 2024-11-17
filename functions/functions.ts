@@ -46,3 +46,31 @@ export const getDateNow = ( ) => {
   const fechaActual = new Date();
   return format(fechaActual, "yyyy-MM-dd'T'HH:mm");
 }
+
+export function calcularEdad(fechaNacimientoStr: string) {
+  // Convierte la fecha de nacimiento de string a Date
+  const fechaNacimiento = new Date(fechaNacimientoStr);
+
+  // Obtén la fecha actual
+  const fechaActual = new Date();
+
+  // Calcula la diferencia en años
+  let edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
+
+  // Ajusta la edad si aún no ha pasado el cumpleaños este año
+  const mesActual = fechaActual.getMonth();
+  const diaActual = fechaActual.getDate();
+  const mesNacimiento = fechaNacimiento.getMonth();
+  const diaNacimiento = fechaNacimiento.getDate();
+
+  if (mesActual < mesNacimiento || (mesActual === mesNacimiento && diaActual < diaNacimiento)) {
+    edad--;
+  }
+
+  return edad;
+}
+
+export const deleteUserAccount = async(tipo:string, id: string) => {
+  const request = await fetch(`http://localhost:3000/api/${tipo}/${id}`,{method: 'DELETE'})
+  return await request.json()
+}
