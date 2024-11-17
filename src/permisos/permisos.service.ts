@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Permiso } from './entities/permiso.entity';
 import { Repository } from 'typeorm';
 import { AdminProfileService } from 'src/admin_profile/admin_profile.service';
-import { newMessage } from 'functions/functions';
+import { createTables, newMessage } from 'functions/functions';
 import { CreateTablaDto } from 'src/tablas/dto/create-tabla.dto';
 
 @Injectable()
@@ -18,43 +18,24 @@ export class PermisosService {
   
   async create(createPermisoDto: CreatePermisoDto) {
     try {
-      const perm = this.permRepository.create(createPermisoDto)
+      const {id, tablas} = createPermisoDto
+      const permiso = new Permiso()
+      permiso.id = id
 
-      this.permRepository.save(perm)
+      this.permRepository.save(permiso)
 
-      const tablas: CreateTablaDto = {
-        id: perm.id,
-        admin_profile: true,
-        profile: true,
-        user: true,
-        alumno_profile: true,
-        profesor_profile: true,
-        incidencia: true,
-        grado: true,
-        tipo_incidencia: true,
-        permisos: true,
-        tablas: true,
-        cuenta_puntos: true,
-        retrasos: true,
-        grupo: true,
-        permiso_id: perm.id
-      }
+      
+      // const request = await fetch('http://localhost:3000/api/tablas', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify(tablas)
+      // })
+      const promesas:Promise<messageResponse>[] = tablas.map((tabla) => {return createTables(tabla)})
+      await Promise.all(promesas)
 
-      const request = await fetch('http://localhost:3000/api/tablas', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(tablas)
-      })
-
-      const requestData = await request.json()
-      console.log("request tablas ",requestData)
-      if(requestData.status !== 200){
-        throw new NotImplementedException('Permissions cannot be implemented')
-      }
-
-      return perm
+      return permiso
     } catch (error) {
       throw error
     }

@@ -29,10 +29,76 @@ export class AdminProfileService {
       }
       const permisos: CreatePermisoDto = {
         id: user.id,
-        delete: true,
-        insert: true,
-        read: true, 
-        write: true,
+        tablas: [
+          {
+            tipo: "r",
+            admin_profile: true,
+            alumno_profile: true,
+            cuenta_puntos: true,
+            grado: true,
+            grupo: true,
+            incidencia: true,
+            permiso_id: user.id,
+            permisos: true,
+            profesor_profile: true,
+            profile: true,
+            retrasos: true,
+            tablas: true,
+            tipo_incidencia: true,
+            user: true
+          },
+          {
+            tipo: "w",
+            admin_profile: true,
+            alumno_profile: true,
+            cuenta_puntos: true,
+            grado: true,
+            grupo: true,
+            incidencia: true,
+            permiso_id: user.id,
+            permisos: true,
+            profesor_profile: true,
+            profile: true,
+            retrasos: true,
+            tablas: true,
+            tipo_incidencia: true,
+            user: true
+          },
+          {
+            tipo: "i",
+            admin_profile: true,
+            alumno_profile: true,
+            cuenta_puntos: true,
+            grado: true,
+            grupo: true,
+            incidencia: true,
+            permiso_id: user.id,
+            permisos: true,
+            profesor_profile: true,
+            profile: true,
+            retrasos: true,
+            tablas: true,
+            tipo_incidencia: true,
+            user: true
+          },
+          {
+            tipo: "d",
+            admin_profile: true,
+            alumno_profile: true,
+            cuenta_puntos: true,
+            grado: true,
+            grupo: true,
+            incidencia: true,
+            permiso_id: user.id,
+            permisos: true,
+            profesor_profile: true,
+            profile: true,
+            retrasos: true,
+            tablas: true,
+            tipo_incidencia: true,
+            user: true
+          },
+        ]
       }
       const permiso = await this.permService.create(permisos)
 

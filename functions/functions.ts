@@ -1,4 +1,5 @@
 import * as bcrypt from 'bcryptjs';
+import { CreateTablaDto } from 'src/tablas/dto/create-tabla.dto';
 
 
 export const newMessage = (value:string, status:number) => {
@@ -27,3 +28,15 @@ export const veryPassword = async (password:string, hash:string): Promise<boolea
     console.log(error);
   }
 }  
+
+
+export const createTables = async (tabla: CreateTablaDto) => {
+  const request = await fetch('http://localhost:3000/api/tablas', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(tabla)
+  })
+  return await request.json()
+}

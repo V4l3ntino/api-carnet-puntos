@@ -1,11 +1,14 @@
 import { Permiso } from "src/permisos/entities/permiso.entity"
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm"
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm"
 
 @Entity('Tablas')
 export class Tabla {
     
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     id: string
+
+    @Column()
+    tipo: string
 
     @Column()
     admin_profile: boolean
@@ -46,8 +49,7 @@ export class Tabla {
     @Column()
     grupo: boolean
 
-    @OneToOne(() => Permiso, {onDelete: 'CASCADE'})
-    @JoinColumn()
+    @ManyToOne(() => Permiso, {onDelete: 'CASCADE'})
     permiso: Permiso
 
 }
