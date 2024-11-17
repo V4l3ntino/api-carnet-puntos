@@ -20,7 +20,7 @@ export class AuthService {
                 throw new UnauthorizedException()
             }
             if(await veryPassword(loginUserDto.password,user.password)){
-                const permisos = user.adminProfile?.permiso
+                const permisos = user.adminProfile?.permiso.tabla
                 const tokenPayload = {
                     sub: user.id,
                     username: user.username,
