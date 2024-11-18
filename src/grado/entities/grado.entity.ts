@@ -11,7 +11,7 @@ export class Grado {
     @Column()
     cantidadPuntos: number
 
-    @ManyToOne(() => User, (user) => user.grado)
+    @ManyToOne(() => User, (user) => user.grado, {onDelete:'SET NULL'})
     user: User
 
     @OneToMany(() => TipoIncidencia, (tipoIncidencia) => tipoIncidencia.grado)

@@ -18,6 +18,7 @@ import { RetrasosModule } from './retrasos/retrasos.module';
 import { PermisosModule } from './permisos/permisos.module';
 import { AuthModule } from './auth/auth.module';
 import { SeedController } from './seed/seed.controller';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
@@ -45,9 +46,10 @@ import { SeedController } from './seed/seed.controller';
     TipoIncidenciaModule,
     RetrasosModule,
     PermisosModule,
-    AuthModule
+    AuthModule,
+    SeedModule
   ],
-  controllers: [AppController, SeedController],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}

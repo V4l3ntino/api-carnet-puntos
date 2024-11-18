@@ -12,7 +12,7 @@ export class Grupo {
     @Column()
     created_at: string
 
-    @ManyToOne(() => User, (user) => user.grupo)
+    @ManyToOne(() => User, (user) => user.grupo, {onDelete: 'SET NULL'})
     user: User
 
     @OneToMany(() => AlumnoProfile, (alumno) => alumno.grupo)

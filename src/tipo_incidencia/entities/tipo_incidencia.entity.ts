@@ -13,7 +13,7 @@ export class TipoIncidencia {
     @Column()
     created_at: string
     
-    @ManyToOne(() => User, (user) => user.tipoIncidencia)
+    @ManyToOne(() => User, (user) => user.tipoIncidencia, {onDelete:'SET NULL'})
     @JoinColumn()
     user: User
 
