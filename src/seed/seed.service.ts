@@ -7,6 +7,7 @@ import seedAlumnos from './data/alumnos.json'
 import seedProfesors from './data/profesores.json'
 import seedGrados from './data/grado.json'
 import seedTipoIncidencias from './data/tipoIncidencia.json'
+import seedIncidencias from './data/incidencias.json'
 
 import { User } from 'src/user/entities/user.entity';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
@@ -22,6 +23,8 @@ import { GradoService } from 'src/grado/grado.service';
 import { CreateGradoDto } from 'src/grado/dto/create-grado.dto';
 import { CreateTipoIncidenciaDto } from 'src/tipo_incidencia/dto/create-tipo_incidencia.dto';
 import { TipoIncidenciaService } from 'src/tipo_incidencia/tipo_incidencia.service';
+import { IncidenciaService } from 'src/incidencia/incidencia.service';
+import { CreateIncidenciaDto } from 'src/incidencia/dto/create-incidencia.dto';
 
 @Injectable()
 export class SeedService {
@@ -32,7 +35,8 @@ export class SeedService {
         private readonly alumnoSercie: AlumnoProfileService,
         private readonly profesorService: ProfesorProfileService,
         private readonly gradoService: GradoService,
-        private readonly tipoIncidencia: TipoIncidenciaService
+        private readonly tipoIncidenciaService: TipoIncidenciaService,
+        private readonly incidenciasService: IncidenciaService
     ){}
 
     public async loadData(){
@@ -43,6 +47,7 @@ export class SeedService {
         const profesores = await this.insertProfesors()
         const grados = await this.insertGrados()
         const tipoIncidencias = await this.inserTiposIncidencias()
+        const incdiencias = await this.insertIncdiencias()
         return {
             users,
             admins,
@@ -50,7 +55,8 @@ export class SeedService {
             alumnos,
             profesores,
             grados,
-            tipoIncidencias
+            tipoIncidencias,
+            incdiencias
         }
     }
 
@@ -112,9 +118,18 @@ export class SeedService {
     private async inserTiposIncidencias(){
         const insertTipoIncidencias = []
         seedTipoIncidencias.forEach((tipoIncidencia: CreateTipoIncidenciaDto) => {
-            insertTipoIncidencias.push(this.tipoIncidencia.create(tipoIncidencia))
+            insertTipoIncidencias.push(this.tipoIncidenciaService.create(tipoIncidencia))
         })
         await Promise.all(insertTipoIncidencias)
+        return true;
+    }
+
+    private async insertIncdiencias(){
+        const insertIncidencias = []
+        seedIncidencias.forEach((incidencias: CreateIncidenciaDto) => {
+            insertIncidencias.push(this.incidenciasService.create(incidencias))
+        })
+        await Promise.all(insertIncidencias)
         return true;
     }
 }

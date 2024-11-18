@@ -1,11 +1,11 @@
 import { AlumnoProfile } from "src/alumno_profile/entities/alumno_profile.entity";
 import { TipoIncidencia } from "src/tipo_incidencia/entities/tipo_incidencia.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('Incidencia')
 export class Incidencia {
-    @PrimaryGeneratedColumn()
+    @PrimaryColumn()
     id: number
 
     @Column()
