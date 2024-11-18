@@ -4,7 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { deleteUserAccount, hashPassword, newMessage, veryPassword } from 'functions/functions';
+import { deleteUserAccount, getDateNow, hashPassword, newMessage, veryPassword } from 'functions/functions';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateProfileDto } from 'src/profile/dto/create-profile.dto';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -18,16 +18,16 @@ export class UserService {
   ){}
 
   async create(createUserDto: CreateUserDto) {
-    const fechaActual = new Date();
-    const fechaFormateada = format(fechaActual, "yyyy-MM-dd'T'HH:mm");
     try {
-      const user = this.uRepository.create(createUserDto)
-      user.created_at = fechaFormateada
-      user.id = uuidv4()
-      user.password = await hashPassword(user.password);
+      const {password, username, uuid} = createUserDto
+      const user = new User()
+      user.created_at = getDateNow()
+      user.id = uuid
+      user.username = username
+      user.password = await hashPassword(password);
       await this.uRepository.save(user);
       const profile:CreateProfileDto = {
-        userId: user.id
+        userId: uuid
       }
       const request = await fetch("http://localhost:3000/api/profile/",{
         method: 'POST',

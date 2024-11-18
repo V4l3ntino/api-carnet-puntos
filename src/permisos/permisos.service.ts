@@ -22,7 +22,7 @@ export class PermisosService {
       const permiso = new Permiso()
       permiso.id = id
 
-      this.permRepository.save(permiso)
+      await this.permRepository.save(permiso)
 
       
       // const request = await fetch('http://localhost:3000/api/tablas', {
@@ -34,6 +34,7 @@ export class PermisosService {
       // })
       const promesas:Promise<messageResponse>[] = tablas.map((tabla) => {return createTables(tabla)})
       await Promise.all(promesas)
+      console.log(promesas)
 
       return permiso
     } catch (error) {
