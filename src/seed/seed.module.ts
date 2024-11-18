@@ -6,10 +6,21 @@ import { AdminProfileModule } from 'src/admin_profile/admin_profile.module';
 import { GrupoModule } from 'src/grupo/grupo.module';
 import { AlumnoProfileModule } from 'src/alumno_profile/alumno_profile.module';
 import { ProfesorProfileModule } from 'src/profesor_profile/profesor_profile.module';
+import { GradoModule } from 'src/grado/grado.module';
+import { TipoIncidenciaModule } from 'src/tipo_incidencia/tipo_incidencia.module';
+import { IncidenciaModule } from 'src/incidencia/incidencia.module';
 
 @Module({
   controllers: [SeedController],
   providers: [SeedService],
-  imports: [ UserModule, AdminProfileModule, GrupoModule, AlumnoProfileModule, ProfesorProfileModule]
+  imports: [ UserModule,
+    AdminProfileModule,
+    GrupoModule,
+    AlumnoProfileModule,
+    ProfesorProfileModule,
+    GradoModule,
+    TipoIncidenciaModule,
+    IncidenciaModule
+  ]
 })
 export class SeedModule {}

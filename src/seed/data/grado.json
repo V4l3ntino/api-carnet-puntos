@@ -1,0 +1,20 @@
+[
+    {
+        "user_id": "4ec0c4d1-bd90-4f55-94b6-79c3b55cb761",
+        "id": "1",
+        "nombre": "Leve",
+        "cantidadPuntos": "2"
+    },
+    {
+        "user_id": "4ec0c4d1-bd90-4f55-94b6-79c3b55cb761",
+        "id": "2",
+        "nombre": "Grave",
+        "cantidadPuntos": "6"
+    },
+    {
+        "user_id": "4ec0c4d1-bd90-4f55-94b6-79c3b55cb761",
+        "id": "3",
+        "nombre": "Muy Grave",
+        "cantidadPuntos": "15"
+    }
+]

@@ -20,7 +20,7 @@ export class TipoIncidenciaService {
 
   async create(createTipoIncidenciaDto: CreateTipoIncidenciaDto) {
     try {
-      const {descripcion, grado, user_id} = createTipoIncidenciaDto
+      const {descripcion, grado, user_id, id} = createTipoIncidenciaDto
 
       const user = await this.userService.findOne(user_id)
       const gradoObj = await this.gradoService.findOne(+grado)
@@ -29,6 +29,7 @@ export class TipoIncidenciaService {
       }
 
       const tipoIncidencia = new TipoIncidencia()
+      tipoIncidencia.id = +id
       tipoIncidencia.descripcion = descripcion
       tipoIncidencia.grado = gradoObj
       tipoIncidencia.user = user

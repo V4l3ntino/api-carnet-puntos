@@ -5,6 +5,8 @@ import seedAdmins from './data/admin.json';
 import seedGrupos from './data/grupos.json'
 import seedAlumnos from './data/alumnos.json'
 import seedProfesors from './data/profesores.json'
+import seedGrados from './data/grado.json'
+import seedTipoIncidencias from './data/tipoIncidencia.json'
 
 import { User } from 'src/user/entities/user.entity';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
@@ -16,6 +18,10 @@ import { CreateGrupoDto } from 'src/grupo/dto/create-grupo.dto';
 import { CreateAlumnoProfileDto } from 'src/alumno_profile/dto/create-alumno_profile.dto';
 import { ProfesorProfileService } from 'src/profesor_profile/profesor_profile.service';
 import { CreateProfesorProfileDto } from 'src/profesor_profile/dto/create-profesor_profile.dto';
+import { GradoService } from 'src/grado/grado.service';
+import { CreateGradoDto } from 'src/grado/dto/create-grado.dto';
+import { CreateTipoIncidenciaDto } from 'src/tipo_incidencia/dto/create-tipo_incidencia.dto';
+import { TipoIncidenciaService } from 'src/tipo_incidencia/tipo_incidencia.service';
 
 @Injectable()
 export class SeedService {
@@ -24,7 +30,9 @@ export class SeedService {
         private readonly adminService: AdminProfileService,
         private readonly grupoService: GrupoService,
         private readonly alumnoSercie: AlumnoProfileService,
-        private readonly profesorService: ProfesorProfileService
+        private readonly profesorService: ProfesorProfileService,
+        private readonly gradoService: GradoService,
+        private readonly tipoIncidencia: TipoIncidenciaService
     ){}
 
     public async loadData(){
@@ -33,12 +41,16 @@ export class SeedService {
         const grupos = await this.inserGrupos()
         const alumnos = await this.insertAlumnos()
         const profesores = await this.insertProfesors()
+        const grados = await this.insertGrados()
+        const tipoIncidencias = await this.inserTiposIncidencias()
         return {
             users,
             admins,
             grupos,
             alumnos,
-            profesores
+            profesores,
+            grados,
+            tipoIncidencias
         }
     }
 
@@ -85,6 +97,24 @@ export class SeedService {
             insertProfesors.push(this.profesorService.create(profesor))
         })
         await Promise.all(insertProfesors)
+        return true;
+    }
+
+    private async insertGrados(){
+        const insertGrados = []
+        seedGrados.forEach((grado: CreateGradoDto) => {
+            insertGrados.push(this.gradoService.create(grado))
+        })
+        await Promise.all(insertGrados)
+        return true;
+    }
+
+    private async inserTiposIncidencias(){
+        const insertTipoIncidencias = []
+        seedTipoIncidencias.forEach((tipoIncidencia: CreateTipoIncidenciaDto) => {
+            insertTipoIncidencias.push(this.tipoIncidencia.create(tipoIncidencia))
+        })
+        await Promise.all(insertTipoIncidencias)
         return true;
     }
 }

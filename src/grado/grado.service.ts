@@ -18,7 +18,7 @@ export class GradoService {
 
   async create(createGradoDto: CreateGradoDto) {
     try {
-      const {user_id, cantidadPuntos, nombre} = createGradoDto
+      const {user_id, cantidadPuntos, nombre, id} = createGradoDto
       const user = await this.userService.findOne(user_id)
 
       if(!user){
@@ -26,7 +26,7 @@ export class GradoService {
       }
 
       const grado = new Grado()
-
+      grado.id = +id
       grado.cantidadPuntos = +cantidadPuntos
       grado.nombre = nombre
       grado.user = user

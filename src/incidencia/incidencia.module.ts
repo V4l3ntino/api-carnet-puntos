@@ -14,5 +14,6 @@ import { TipoIncidenciaModule } from 'src/tipo_incidencia/tipo_incidencia.module
   ],
   controllers: [IncidenciaController],
   providers: [IncidenciaService],
+  exports: [IncidenciaService]
 })
 export class IncidenciaModule {}
