@@ -128,7 +128,7 @@ export class AdminProfileService {
 
   async findAll() {
     try {
-      return await this.adminRepository.find({relations: ['user','permiso', 'permiso.tabla']})
+      return await this.adminRepository.find({relations: ['user.profile','permiso', 'permiso.tabla']})
     } catch (error) {
       throw new InternalServerErrorException("Error to find all admins profiles")
     }

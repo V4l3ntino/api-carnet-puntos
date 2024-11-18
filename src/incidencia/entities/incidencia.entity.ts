@@ -14,7 +14,7 @@ export class Incidencia {
     @Column()
     created_at: string
 
-    @ManyToOne(() => User, (user) => user.incidencia)
+    @ManyToOne(() => User, (user) => user.incidencia, {onDelete: 'SET NULL'})
     user: User
 
     @ManyToOne(() => AlumnoProfile, (alumnoProfile) => alumnoProfile.incidencia, {onDelete: 'CASCADE'})

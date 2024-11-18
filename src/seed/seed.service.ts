@@ -8,6 +8,7 @@ import seedProfesors from './data/profesores.json'
 import seedGrados from './data/grado.json'
 import seedTipoIncidencias from './data/tipoIncidencia.json'
 import seedIncidencias from './data/incidencias.json'
+import seedProfiles from './data/profile.json'
 
 import { User } from 'src/user/entities/user.entity';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
@@ -25,6 +26,8 @@ import { CreateTipoIncidenciaDto } from 'src/tipo_incidencia/dto/create-tipo_inc
 import { TipoIncidenciaService } from 'src/tipo_incidencia/tipo_incidencia.service';
 import { IncidenciaService } from 'src/incidencia/incidencia.service';
 import { CreateIncidenciaDto } from 'src/incidencia/dto/create-incidencia.dto';
+import { ProfileService } from 'src/profile/profile.service';
+import { CreateProfileDto } from 'src/profile/dto/create-profile.dto';
 
 @Injectable()
 export class SeedService {
@@ -36,7 +39,8 @@ export class SeedService {
         private readonly profesorService: ProfesorProfileService,
         private readonly gradoService: GradoService,
         private readonly tipoIncidenciaService: TipoIncidenciaService,
-        private readonly incidenciasService: IncidenciaService
+        private readonly incidenciasService: IncidenciaService,
+        private readonly profileService: ProfileService
     ){}
 
     public async loadData(){
@@ -48,6 +52,8 @@ export class SeedService {
         const grados = await this.insertGrados()
         const tipoIncidencias = await this.inserTiposIncidencias()
         const incdiencias = await this.insertIncdiencias()
+        const profiles = await this.insertProfiles()
+
         return {
             users,
             admins,
@@ -56,7 +62,8 @@ export class SeedService {
             profesores,
             grados,
             tipoIncidencias,
-            incdiencias
+            incdiencias,
+            profiles
         }
     }
 
@@ -132,4 +139,15 @@ export class SeedService {
         await Promise.all(insertIncidencias)
         return true;
     }
+
+    private async insertProfiles(){
+        const insertProfiles = []
+        seedProfiles.forEach((profile: CreateProfileDto) => {
+            insertProfiles.push(this.profileService.create(profile))
+        })
+        await Promise.all(insertProfiles)
+        return true;
+    }
+
+
 }

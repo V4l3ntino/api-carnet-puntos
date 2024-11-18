@@ -138,7 +138,7 @@ export class AlumnoProfileService {
   }
 
   findAll() {
-    return this.aprofileRepository.find({relations: ['user', 'permiso', 'permiso.tabla', 'grupo', 'incidencia', 'incidencia.tipoIncidencia.grado']})
+    return this.aprofileRepository.find({relations: ['user.profile', 'permiso', 'permiso.tabla', 'grupo', 'incidencia', 'incidencia.tipoIncidencia.grado']})
   }
 
   async findOne(idea: string) {
