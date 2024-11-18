@@ -1,6 +1,7 @@
+import { Incidencia } from "src/incidencia/entities/incidencia.entity";
 import { Permiso } from "src/permisos/entities/permiso.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from "typeorm";
 
 @Entity('Alumno-profile')
 export class AlumnoProfile {
@@ -23,4 +24,7 @@ export class AlumnoProfile {
     @OneToOne(() => Permiso)
     @JoinColumn()
     permiso: Permiso
+
+    @OneToMany(() => Incidencia, (incidencia) => incidencia.alumnoProfile)
+    incidencia: Incidencia[]
 }

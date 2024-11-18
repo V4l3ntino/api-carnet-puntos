@@ -13,5 +13,6 @@ import { PermisosModule } from 'src/permisos/permisos.module';
   ],
   controllers: [AlumnoProfileController],
   providers: [AlumnoProfileService],
+  exports: [AlumnoProfileService]
 })
 export class AlumnoProfileModule {}

@@ -137,8 +137,8 @@ export class AlumnoProfileService {
     return this.aprofileRepository.find({relations: ['user', 'permiso', 'permiso.tabla']})
   }
 
-  findOne(id: string) {
-    return this.aprofileRepository.findOne({relations: ['user', 'permiso', 'permiso.tabla']})
+  async findOne(idea: string) {
+    return await this.aprofileRepository.findOne({where:{idea},relations: ['user', 'permiso', 'permiso.tabla']})
   }
 
   update(id: string, updateAlumnoProfileDto: UpdateAlumnoProfileDto) {

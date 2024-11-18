@@ -13,5 +13,6 @@ import { GradoModule } from 'src/grado/grado.module';
   ],
   controllers: [TipoIncidenciaController],
   providers: [TipoIncidenciaService],
+  exports: [TipoIncidenciaService]
 })
 export class TipoIncidenciaModule {}

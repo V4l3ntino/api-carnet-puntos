@@ -24,11 +24,8 @@ export class TipoIncidenciaService {
 
       const user = await this.userService.findOne(user_id)
       const gradoObj = await this.gradoService.findOne(+grado)
-      if(!user){
-        throw new NotFoundException('User not found')
-      }
-      if(!gradoObj){
-        throw new NotFoundException('Grado not found')
+      if(!user || !gradoObj){
+        throw new NotFoundException('Dependencies not found')
       }
 
       const tipoIncidencia = new TipoIncidencia()
@@ -46,7 +43,7 @@ export class TipoIncidenciaService {
   }
 
   findAll() {
-    return this.tiRepository.find();
+    return this.tiRepository.find({relations: ['grado', 'incidencia']});
   }
 
   findOne(id: number) {

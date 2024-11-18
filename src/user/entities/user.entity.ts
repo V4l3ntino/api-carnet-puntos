@@ -2,6 +2,7 @@ import { AdminProfile } from "src/admin_profile/entities/admin_profile.entity";
 import { AlumnoProfile } from "src/alumno_profile/entities/alumno_profile.entity";
 import { Grado } from "src/grado/entities/grado.entity";
 import { Grupo } from "src/grupo/entities/grupo.entity";
+import { Incidencia } from "src/incidencia/entities/incidencia.entity";
 import { ProfesorProfile } from "src/profesor_profile/entities/profesor_profile.entity";
 import { Profile } from "src/profile/entities/profile.entity";
 import { TipoIncidencia } from "src/tipo_incidencia/entities/tipo_incidencia.entity";
@@ -33,12 +34,15 @@ export class User {
     alumnoProfile: AlumnoProfile
 
     @OneToMany(() => Grupo, (grupo) => grupo.user)
-    grupo: Grupo
+    grupo: Grupo[]
 
     @OneToMany(() => Grado, (grado) => grado.user)
-    grado: Grado
+    grado: Grado[]
 
     @OneToMany(() => TipoIncidencia, (tipoIncidencia) => tipoIncidencia.user)
-    tipoIncidencia: TipoIncidencia
+    tipoIncidencia: TipoIncidencia[]
+
+    @OneToMany(() => Incidencia, (incidencia) => incidencia.user)
+    incidencia: Incidencia[]
 
 }
