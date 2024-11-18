@@ -14,5 +14,6 @@ import { GrupoModule } from 'src/grupo/grupo.module';
   ],
   controllers: [ProfesorProfileController],
   providers: [ProfesorProfileService],
+  exports: [ProfesorProfileService]
 })
 export class ProfesorProfileModule {}

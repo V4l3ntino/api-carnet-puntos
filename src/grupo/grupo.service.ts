@@ -40,7 +40,7 @@ export class GrupoService {
   }
 
   findAll() {
-    return this.gRepository.find({relations: ['alumnos']});
+    return this.gRepository.find({relations: ['alumnos', 'profesor']});
   }
 
   async findOne(id: number) {
