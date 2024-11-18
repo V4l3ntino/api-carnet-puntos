@@ -18,14 +18,15 @@ export class GrupoService {
 
   async create(createGrupoDto: CreateGrupoDto) {
     try {
-      const {id, nombre} = createGrupoDto
-      const user = await this.uService.findOne(id)
+      const {id, nombre, uuid} = createGrupoDto
+      const user = await this.uService.findOne(uuid)
 
       if(!user){
         throw new NotFoundException("User account not found")
       }
 
       const grupo = new Grupo()
+      grupo.id = +id
       grupo.nombre = nombre
       grupo.user = user
       grupo.created_at = getDateNow()

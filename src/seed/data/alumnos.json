@@ -1,0 +1,14 @@
+[
+    {
+        "id":"752b8303-5245-4c74-b3b7-66fa849d4d5e",
+        "fechaNacimiento": "2001-03-05",
+        "repetidor": false,
+        "grupo_id": "1"
+    },
+    {
+        "id":"349d792d-1f62-41c5-8192-75f705d32d19",
+        "fechaNacimiento": "2006-06-06",
+        "repetidor": true,
+        "grupo_id": "1"
+    }
+]

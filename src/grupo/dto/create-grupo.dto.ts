@@ -1,9 +1,11 @@
-import { IsString } from "class-validator";
+import { IsNumberString, IsString } from "class-validator";
 
 export class CreateGrupoDto {
     @IsString()
-    id: string
+    uuid: string
 
+    @IsNumberString()
+    id: string
     @IsString()
     nombre: string
 }

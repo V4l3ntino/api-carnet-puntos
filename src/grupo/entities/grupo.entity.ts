@@ -5,7 +5,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColu
 
 @Entity('Grupo')
 export class Grupo {
-    @PrimaryGeneratedColumn()
+    @PrimaryColumn()
     id: number
     @Column()
     nombre: string
