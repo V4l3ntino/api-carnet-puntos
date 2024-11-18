@@ -1,7 +1,8 @@
+import { Grupo } from "src/grupo/entities/grupo.entity";
 import { Incidencia } from "src/incidencia/entities/incidencia.entity";
 import { Permiso } from "src/permisos/entities/permiso.entity";
 import { User } from "src/user/entities/user.entity";
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn } from "typeorm";
 
 @Entity('Alumno-profile')
 export class AlumnoProfile {
@@ -27,4 +28,7 @@ export class AlumnoProfile {
 
     @OneToMany(() => Incidencia, (incidencia) => incidencia.alumnoProfile)
     incidencia: Incidencia[]
+
+    @ManyToOne(() => Grupo, (grupo) => grupo.alumnos)
+    grupo: Grupo
 }

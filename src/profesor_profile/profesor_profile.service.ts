@@ -8,6 +8,7 @@ import { UserService } from 'src/user/user.service';
 import { PermisosService } from 'src/permisos/permisos.service';
 import { CreatePermisoDto } from 'src/permisos/dto/create-permiso.dto';
 import { getDateNow, newMessage } from 'functions/functions';
+import { GrupoService } from 'src/grupo/grupo.service';
 
 @Injectable()
 export class ProfesorProfileService {
@@ -16,17 +17,19 @@ export class ProfesorProfileService {
     @InjectRepository(ProfesorProfile)
     private readonly pprofileRepository: Repository<ProfesorProfile>,
     private readonly userService: UserService,
-    private readonly permisoService: PermisosService
+    private readonly permisoService: PermisosService,
+    private readonly grupoService: GrupoService
   ){}
 
   async create(createProfesorProfileDto: CreateProfesorProfileDto) {
     try {
-      const { id, materia, tablas } = createProfesorProfileDto
+      const { id, materia, tablas, grupo_id } = createProfesorProfileDto
 
       const user = await this.userService.findOne(id)
+      const grupo = await this.grupoService.findOne(+grupo_id)
 
-      if(!user){
-        throw new NotFoundException("User not found")
+      if(!user || !grupo){
+        throw new NotFoundException("Dependencies not found")
       }
 
       if(user.alumnoProfile !== null){
@@ -47,6 +50,7 @@ export class ProfesorProfileService {
       profesorProfile.materia = materia
       profesorProfile.user = user
       profesorProfile.permiso = permiso
+      profesorProfile.grupo = grupo
 
       this.pprofileRepository.save(profesorProfile)
 
@@ -64,7 +68,7 @@ export class ProfesorProfileService {
   }
 
   findAll() {
-    return this.pprofileRepository.find({relations: ['user', 'permiso', 'permiso.tabla']})
+    return this.pprofileRepository.find({relations: ['user', 'permiso', 'permiso.tabla', 'grupo', 'grupo.alumnos']})
   }
 
   findOne(idea: string) {

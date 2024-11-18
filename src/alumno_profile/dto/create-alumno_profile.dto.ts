@@ -1,4 +1,4 @@
-import { IsBoolean, IsDateString, isDateString, IsString } from "class-validator"
+import { IsBoolean, IsDateString, isDateString, IsNumberString, IsString } from "class-validator"
 
 export class CreateAlumnoProfileDto {
 
@@ -8,4 +8,7 @@ export class CreateAlumnoProfileDto {
     fechaNacimiento: string
     @IsBoolean()
     repetidor: boolean
+    
+    @IsNumberString()
+    grupo_id: string
 }

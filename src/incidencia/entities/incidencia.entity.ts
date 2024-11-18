@@ -17,7 +17,7 @@ export class Incidencia {
     @ManyToOne(() => User, (user) => user.incidencia)
     user: User
 
-    @ManyToOne(() => AlumnoProfile, (alumnoProfile) => alumnoProfile.incidencia)
+    @ManyToOne(() => AlumnoProfile, (alumnoProfile) => alumnoProfile.incidencia, {onDelete: 'CASCADE'})
     alumnoProfile: AlumnoProfile
 
     @ManyToOne(() => TipoIncidencia, (tipoIncidencia) => tipoIncidencia.incidencia)

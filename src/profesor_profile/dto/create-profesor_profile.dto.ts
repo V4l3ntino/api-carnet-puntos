@@ -1,5 +1,5 @@
 import { Type } from "class-transformer"
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsString, ValidateNested } from "class-validator"
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsNumberString, IsString, ValidateNested } from "class-validator"
 import { CreateTablaDto } from "src/tablas/dto/create-tabla.dto"
 
 export class CreateProfesorProfileDto {
@@ -7,6 +7,9 @@ export class CreateProfesorProfileDto {
     id: string
     @IsString()
     materia: string
+
+    @IsNumberString()
+    grupo_id: string
 
     @IsArray()
     @ValidateNested({each: true}) // Valida que cada elemento del array sea un objeto válido

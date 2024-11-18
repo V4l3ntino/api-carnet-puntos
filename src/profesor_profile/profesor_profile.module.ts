@@ -5,11 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProfesorProfile } from './entities/profesor_profile.entity';
 import { UserModule } from 'src/user/user.module';
 import { PermisosModule } from 'src/permisos/permisos.module';
+import { GrupoModule } from 'src/grupo/grupo.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([ProfesorProfile]),
-    UserModule, PermisosModule
+    UserModule, PermisosModule, GrupoModule
   ],
   controllers: [ProfesorProfileController],
   providers: [ProfesorProfileService],

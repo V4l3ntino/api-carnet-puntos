@@ -9,6 +9,7 @@ import { PermisosService } from 'src/permisos/permisos.service';
 import { calcularEdad, getDateNow, newMessage } from 'functions/functions';
 import { v4 as uuidv4 } from 'uuid';
 import { CreatePermisoDto } from 'src/permisos/dto/create-permiso.dto';
+import { GrupoService } from 'src/grupo/grupo.service';
 
 
 @Injectable()
@@ -17,15 +18,17 @@ export class AlumnoProfileService {
     @InjectRepository(AlumnoProfile)
     private readonly aprofileRepository: Repository<AlumnoProfile>,
     private readonly uService: UserService,
-    private readonly permService: PermisosService
+    private readonly permService: PermisosService,
+    private readonly grupoService: GrupoService
   ){}
 
   async create(createAlumnoProfileDto: CreateAlumnoProfileDto) {
     try {
-      const {fechaNacimiento, id, repetidor} = createAlumnoProfileDto
+      const {fechaNacimiento, id, repetidor, grupo_id} = createAlumnoProfileDto
       const user = await this.uService.findOne(id)
-      if(!user){
-        throw new NotFoundException("User not found")
+      const grupo = await this.grupoService.findOne(+grupo_id)
+      if(!user || !grupo){
+        throw new NotFoundException("Dependencies not found")
       }
       if( user.profesorProfile !== null ){
         throw new NotImplementedException("The user account is a profesor profile, we cant make him a student profile")
@@ -116,6 +119,7 @@ export class AlumnoProfileService {
       alumnoProfile.permiso = permiso
       alumnoProfile.repetidor = repetidor
       alumnoProfile.edad = calcularEdad(fechaNacimiento)
+      alumnoProfile.grupo = grupo
       this.aprofileRepository.save(alumnoProfile);
       
 
@@ -134,7 +138,7 @@ export class AlumnoProfileService {
   }
 
   findAll() {
-    return this.aprofileRepository.find({relations: ['user', 'permiso', 'permiso.tabla']})
+    return this.aprofileRepository.find({relations: ['user', 'permiso', 'permiso.tabla', 'grupo', 'incidencia', 'incidencia.tipoIncidencia.grado']})
   }
 
   async findOne(idea: string) {

@@ -39,11 +39,11 @@ export class GrupoService {
   }
 
   findAll() {
-    return this.gRepository.find();
+    return this.gRepository.find({relations: ['alumnos']});
   }
 
-  findOne(id: number) {
-    return this.gRepository.findOne({where: {id}});
+  async findOne(id: number) {
+    return await this.gRepository.findOne({where: {id}});
   }
 
   update(id: number, updateGrupoDto: UpdateGrupoDto) {

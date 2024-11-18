@@ -17,6 +17,7 @@ import { TipoIncidenciaModule } from './tipo_incidencia/tipo_incidencia.module';
 import { RetrasosModule } from './retrasos/retrasos.module';
 import { PermisosModule } from './permisos/permisos.module';
 import { AuthModule } from './auth/auth.module';
+import { SeedController } from './seed/seed.controller';
 
 @Module({
   imports: [
@@ -46,7 +47,7 @@ import { AuthModule } from './auth/auth.module';
     PermisosModule,
     AuthModule
   ],
-  controllers: [AppController],
+  controllers: [AppController, SeedController],
   providers: [AppService],
 })
 export class AppModule {}

@@ -1,3 +1,4 @@
+import { Grupo } from "src/grupo/entities/grupo.entity";
 import { Permiso } from "src/permisos/entities/permiso.entity";
 import { User } from "src/user/entities/user.entity";
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
@@ -19,4 +20,8 @@ export class ProfesorProfile {
     @OneToOne(() => Permiso)
     @JoinColumn()
     permiso: Permiso
+
+    @OneToOne(() => Grupo)
+    @JoinColumn()
+    grupo: Grupo
 }
