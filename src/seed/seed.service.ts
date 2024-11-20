@@ -28,6 +28,8 @@ import { IncidenciaService } from 'src/incidencia/incidencia.service';
 import { CreateIncidenciaDto } from 'src/incidencia/dto/create-incidencia.dto';
 import { ProfileService } from 'src/profile/profile.service';
 import { CreateProfileDto } from 'src/profile/dto/create-profile.dto';
+import { Grupo } from 'src/grupo/entities/grupo.entity';
+import { newMessage } from 'functions/functions';
 
 @Injectable()
 export class SeedService {
@@ -42,6 +44,28 @@ export class SeedService {
         private readonly incidenciasService: IncidenciaService,
         private readonly profileService: ProfileService
     ){}
+
+    public async deleteData(){
+        const users = await this.userService.findAll()
+        const grupos = await this.grupoService.findAll()
+        
+        const promises = []
+
+        users.forEach((item) => {
+            promises.push((item: User) => {
+                this.userService.remove(item.id)
+            })
+        })
+        
+        grupos.forEach((item) => {
+            promises.push((item:Grupo) => {
+                this.grupoService.remove(item.id)
+            })
+        })
+        
+        await Promise.all(promises)
+        return newMessage("success", 200)
+    }
 
     public async loadData(){
         const users =  await this.insertUsers()

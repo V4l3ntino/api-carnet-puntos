@@ -1,3 +1,4 @@
+import { CuentaPunto } from "src/cuenta_puntos/entities/cuenta_punto.entity";
 import { Grupo } from "src/grupo/entities/grupo.entity";
 import { Incidencia } from "src/incidencia/entities/incidencia.entity";
 import { Permiso } from "src/permisos/entities/permiso.entity";
@@ -29,6 +30,10 @@ export class AlumnoProfile {
     @OneToMany(() => Incidencia, (incidencia) => incidencia.alumnoProfile)
     incidencia: Incidencia[]
 
-    @ManyToOne(() => Grupo, (grupo) => grupo.alumnos)
+    @ManyToOne(() => Grupo, (grupo) => grupo.alumnos, {onDelete: 'SET NULL'})
     grupo: Grupo
+
+    @OneToOne(() => CuentaPunto)
+    @JoinColumn()
+    cuentaPuntos: CuentaPunto
 }

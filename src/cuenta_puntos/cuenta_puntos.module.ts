@@ -5,8 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CuentaPunto } from './entities/cuenta_punto.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CuentaPunto])],
+  imports: [
+    TypeOrmModule.forFeature([CuentaPunto]),
+  ],
   controllers: [CuentaPuntosController],
   providers: [CuentaPuntosService],
+  exports: [CuentaPuntosService]
 })
 export class CuentaPuntosModule {}

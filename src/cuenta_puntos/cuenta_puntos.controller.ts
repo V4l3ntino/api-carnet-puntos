@@ -25,12 +25,12 @@ export class CuentaPuntosController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.cuentaPuntosService.findOne(+id);
+    return this.cuentaPuntosService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCuentaPuntoDto: UpdateCuentaPuntoDto) {
-    return this.cuentaPuntosService.update(+id, updateCuentaPuntoDto);
+    return this.cuentaPuntosService.update(id, updateCuentaPuntoDto);
   }
 
   @Delete(':id')

@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException, NotImplementedException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, InternalServerErrorException, NotFoundException, NotImplementedException } from '@nestjs/common';
 import { CreateAlumnoProfileDto } from './dto/create-alumno_profile.dto';
 import { UpdateAlumnoProfileDto } from './dto/update-alumno_profile.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,6 +10,9 @@ import { calcularEdad, getDateNow, newMessage } from 'functions/functions';
 import { v4 as uuidv4 } from 'uuid';
 import { CreatePermisoDto } from 'src/permisos/dto/create-permiso.dto';
 import { GrupoService } from 'src/grupo/grupo.service';
+import { CuentaPuntosService } from 'src/cuenta_puntos/cuenta_puntos.service';
+import { CreateCuentaPuntoDto } from 'src/cuenta_puntos/dto/create-cuenta_punto.dto';
+import { CuentaPunto } from 'src/cuenta_puntos/entities/cuenta_punto.entity';
 
 
 @Injectable()
@@ -19,7 +22,9 @@ export class AlumnoProfileService {
     private readonly aprofileRepository: Repository<AlumnoProfile>,
     private readonly uService: UserService,
     private readonly permService: PermisosService,
-    private readonly grupoService: GrupoService
+    private readonly grupoService: GrupoService,
+    
+    private readonly cuentaPuntosService: CuentaPuntosService
   ){}
 
   async create(createAlumnoProfileDto: CreateAlumnoProfileDto) {
@@ -110,7 +115,13 @@ export class AlumnoProfileService {
           },
         ]
       }
+      const cuentaPuntosDto: CreateCuentaPuntoDto = {
+        id: user.id,
+        cantidad: 100
+      }
+
       const permiso = await this.permService.create(permisos)
+      const cuentaPuntos: CuentaPunto = await this.cuentaPuntosService.create(cuentaPuntosDto)
 
       const alumnoProfile: AlumnoProfile = new AlumnoProfile()
       alumnoProfile.created_at = getDateNow()
@@ -120,6 +131,7 @@ export class AlumnoProfileService {
       alumnoProfile.repetidor = repetidor
       alumnoProfile.edad = calcularEdad(fechaNacimiento)
       alumnoProfile.grupo = grupo
+      alumnoProfile.cuentaPuntos = cuentaPuntos
       this.aprofileRepository.save(alumnoProfile);
       
 
@@ -155,6 +167,7 @@ export class AlumnoProfileService {
 
       await this.aprofileRepository.delete(idea);
       await this.permService.remove(alumnoProfile.permiso.id)
+      await this.cuentaPuntosService.remove(idea)
       return newMessage("success", 200)
     } catch (error) {
       throw error

@@ -1,8 +1,8 @@
-import { IsNumberString, IsString } from "class-validator"
+import { IsNumber, IsString } from "class-validator"
 
 export class CreateCuentaPuntoDto {
     @IsString()
     id: string
-    @IsNumberString()
+    @IsNumber()
     cantidad: number
 }

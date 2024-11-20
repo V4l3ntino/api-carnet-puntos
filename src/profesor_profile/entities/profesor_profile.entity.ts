@@ -21,7 +21,7 @@ export class ProfesorProfile {
     @JoinColumn()
     permiso: Permiso
 
-    @OneToOne(() => Grupo)
+    @OneToOne(() => Grupo, {onDelete:'SET NULL'})
     @JoinColumn()
     grupo: Grupo
 }

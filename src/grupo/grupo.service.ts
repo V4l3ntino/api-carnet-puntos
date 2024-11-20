@@ -6,6 +6,9 @@ import { Repository } from 'typeorm';
 import { Grupo } from './entities/grupo.entity';
 import { UserService } from 'src/user/user.service';
 import { getDateNow, newMessage } from 'functions/functions';
+import { CuentaPunto } from 'src/cuenta_puntos/entities/cuenta_punto.entity';
+import { CreateCuentaPuntoDto } from 'src/cuenta_puntos/dto/create-cuenta_punto.dto';
+import { CuentaPuntosService } from 'src/cuenta_puntos/cuenta_puntos.service';
 
 @Injectable()
 export class GrupoService {
@@ -13,7 +16,9 @@ export class GrupoService {
   constructor(
     @InjectRepository(Grupo)
     private readonly gRepository: Repository<Grupo>,
-    private readonly uService: UserService
+    private readonly uService: UserService,
+    
+    private readonly cuentaPuntosService: CuentaPuntosService
   ){}
 
   async create(createGrupoDto: CreateGrupoDto) {
@@ -31,7 +36,14 @@ export class GrupoService {
       grupo.user = user
       grupo.created_at = getDateNow()
 
-      this.gRepository.save(grupo)
+      const cuentaPuntos: CreateCuentaPuntoDto = {
+        id,
+        cantidad: 12
+      }
+      const cuenta: CuentaPunto = await this.cuentaPuntosService.create(cuentaPuntos)
+
+      grupo.cuentaPuntos = cuenta
+      await this.gRepository.save(grupo)
 
       return newMessage('success', 200)
     } catch (error) {
@@ -51,7 +63,13 @@ export class GrupoService {
     return `This action updates a #${id} grupo`;
   }
 
-  remove(id: number) {
-    return this.gRepository.delete(id);
+  async remove(id: number) {
+    try {
+      await this.gRepository.delete(id);
+      await this.cuentaPuntosService.remove(id.toString())
+      return newMessage("success", 200)
+    } catch (error) {
+      throw error
+    }
   }
 }

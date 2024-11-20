@@ -1,27 +1,26 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateCuentaPuntoDto } from './dto/create-cuenta_punto.dto';
 import { UpdateCuentaPuntoDto } from './dto/update-cuenta_punto.dto';
-import { format } from 'date-fns';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CuentaPunto } from './entities/cuenta_punto.entity';
 import { Repository } from 'typeorm';
+import { getDateNow, newMessage } from 'functions/functions';
 
 @Injectable()
 export class CuentaPuntosService {
   constructor(
     @InjectRepository(CuentaPunto)
-    private readonly cpRepository: Repository<CuentaPunto>
-  ){}
+    private readonly cpRepository: Repository<CuentaPunto>,
+    ){}
 
-  create(createCuentaPuntoDto: CreateCuentaPuntoDto) {
-    const fechaActual = new Date();
-    const fechaFormateada = format(fechaActual, "yyyy-MM-dd'T'HH:mm");
+  async create(createCuentaPuntoDto: CreateCuentaPuntoDto) {
     try {
       const cuenta = this.cpRepository.create(createCuentaPuntoDto)
-      cuenta.created_at = fechaFormateada
-      this.cpRepository.save(cuenta)
+      cuenta.created_at = getDateNow()
+      await this.cpRepository.save(cuenta)
+      return cuenta
     } catch (error) {
-      
+      throw error
     }
   }
 
@@ -29,11 +28,11 @@ export class CuentaPuntosService {
     return this.cpRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cuentaPunto`;
+  findOne(id: string) {
+    return this.cpRepository.findOne({where: {id}});
   }
 
-  update(id: number, updateCuentaPuntoDto: UpdateCuentaPuntoDto) {
+  update(id: string, updateCuentaPuntoDto: UpdateCuentaPuntoDto) {
     return `This action updates a #${id} cuentaPunto`;
   }
 
