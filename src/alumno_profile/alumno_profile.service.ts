@@ -150,15 +150,24 @@ export class AlumnoProfileService {
   }
 
   findAll() {
-    return this.aprofileRepository.find({relations: ['user.profile', 'permiso', 'permiso.tabla', 'grupo', 'incidencia', 'incidencia.tipoIncidencia.grado']})
+    return this.aprofileRepository.find({relations: ['user.profile', 'permiso', 'permiso.tabla', 'grupo', 'incidencia', 'incidencia.tipoIncidencia.grado', 'cuentaPuntos']})
   }
 
   async findOne(idea: string) {
-    return await this.aprofileRepository.findOne({where:{idea},relations: ['user', 'permiso', 'permiso.tabla']})
+    return await this.aprofileRepository.findOne({where:{idea},relations: ['user', 'permiso', 'permiso.tabla', 'cuentaPuntos']})
   }
 
   update(id: string, updateAlumnoProfileDto: UpdateAlumnoProfileDto) {
     return `This action updates a #${id} alumnoProfile`;
+  }
+
+  async saveAlumno(alumno: AlumnoProfile){
+    try {
+      await this.aprofileRepository.save(alumno)
+      return newMessage("success", 200)
+    } catch (error) {
+      throw error
+    }
   }
 
   async remove(idea: string) {

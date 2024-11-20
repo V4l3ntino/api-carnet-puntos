@@ -48,7 +48,7 @@ export class TipoIncidenciaService {
   }
 
   findOne(id: number) {
-    return this.tiRepository.findOne({where: {id}});
+    return this.tiRepository.findOne({where: {id}, relations: ['grado']});
   }
 
   update(id: number, updateTipoIncidenciaDto: UpdateTipoIncidenciaDto) {
