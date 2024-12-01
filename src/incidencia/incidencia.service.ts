@@ -41,7 +41,7 @@ export class IncidenciaService {
       incidencia.tipoIncidencia = tipoIncidenciaObj
 
       alumnoProfile.cuentaPuntos.cantidad -= tipoIncidenciaObj.grado.cantidadPuntos;
-      const response = await this.cuentaPuntosService.saveCuenta(alumnoProfile.cuentaPuntos)
+      const response = this.cuentaPuntosService.saveCuenta(alumnoProfile.cuentaPuntos)
       
       if(response.status != 200){
         throw new NotImplementedException('cannot access to the cuenta puntos of student')
@@ -55,7 +55,7 @@ export class IncidenciaService {
   }
 
   findAll() {
-    return this.iRepository.find({relations: ['user', 'alumnoProfile', 'tipoIncidencia', 'tipoIncidencia.grado']});
+    return this.iRepository.find({relations: ['user', 'alumnoProfile', 'alumnoProfile.user.profile', 'tipoIncidencia', 'tipoIncidencia.grado']});
   }
 
   findOne(id: number) {

@@ -24,9 +24,9 @@ export class CuentaPuntosService {
     }
   }
 
-  async saveCuenta(cuenta: CuentaPunto){
+  saveCuenta(cuenta: CuentaPunto){
     try {
-      await this.cpRepository.save(cuenta)
+       this.cpRepository.save(cuenta)
       return newMessage("success", 200)
     } catch (error) {
       throw error
