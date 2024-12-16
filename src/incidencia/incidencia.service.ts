@@ -33,7 +33,7 @@ export class IncidenciaService {
       }
 
       const incidencia: Incidencia = new Incidencia()
-      incidencia.id = +id
+      incidencia.id = id
       incidencia.alumnoProfile = alumnoProfile
       incidencia.user = user
       incidencia.descripcion = descripcion,
@@ -55,18 +55,18 @@ export class IncidenciaService {
   }
 
   findAll() {
-    return this.iRepository.find({relations: ['user', 'alumnoProfile', 'alumnoProfile.user.profile', 'tipoIncidencia', 'tipoIncidencia.grado']});
+    return this.iRepository.find({relations: ['user', 'user.profile', 'alumnoProfile', 'alumnoProfile.user.profile', 'tipoIncidencia', 'tipoIncidencia.grado']});
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.iRepository.findOneBy({id});
   }
 
-  update(id: number, updateIncidenciaDto: UpdateIncidenciaDto) {
+  update(id: string, updateIncidenciaDto: UpdateIncidenciaDto) {
     return `This action updates a #${id} incidencia`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.iRepository.delete(id);
   }
 }

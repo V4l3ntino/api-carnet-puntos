@@ -68,7 +68,7 @@ export class ProfesorProfileService {
   }
 
   findAll() {
-    return this.pprofileRepository.find({relations: ['user', 'permiso', 'permiso.tabla', 'grupo', 'grupo.alumnos']})
+    return this.pprofileRepository.find({relations: ['user', 'user.profile', 'permiso', 'permiso.tabla', 'grupo', 'grupo.alumnos']})
   }
 
   findOne(idea: string) {

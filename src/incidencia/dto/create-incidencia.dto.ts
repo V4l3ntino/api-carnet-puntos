@@ -5,7 +5,7 @@ export class CreateIncidenciaDto {
     @IsString()
     user_id: string
 
-    @IsNumberString()
+    @IsString()
     id: string
     @IsString()
     alumno_id: string

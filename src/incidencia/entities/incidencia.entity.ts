@@ -6,7 +6,7 @@ import { Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from
 @Entity('Incidencia')
 export class Incidencia {
     @PrimaryColumn()
-    id: number
+    id: string
 
     @Column()
     descripcion: string
