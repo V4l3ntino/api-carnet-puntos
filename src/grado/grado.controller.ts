@@ -8,16 +8,20 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 export class GradoController {
   constructor(private readonly gradoService: GradoService) {}
 
-  @UseGuards(AuthGuard)
-  @Post()
-  create(@Body() createGradoDto: CreateGradoDto, @Request() request) {
-    const insert = request.user?.permisos.find((item) => item.tipo == "i")
+  // @UseGuards(AuthGuard)
+  // @Post()
+  // create(@Body() createGradoDto: CreateGradoDto, @Request() request) {
+  //   const insert = request.user?.permisos.find((item) => item.tipo == "i")
 
-    if(insert.grado){
+  //   if(insert.grado){
       
-      return this.gradoService.create(createGradoDto);
-    }
-    return new ForbiddenException()
+  //     return this.gradoService.create(createGradoDto);
+  //   }
+  //   return new ForbiddenException()
+  // }
+  @Post()
+  create(@Body() createGradoDto: CreateGradoDto) {
+    return this.gradoService.create(createGradoDto);
   }
 
   @Get()
@@ -27,16 +31,16 @@ export class GradoController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.gradoService.findOne(+id);
+    return this.gradoService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateGradoDto: UpdateGradoDto) {
-    return this.gradoService.update(+id, updateGradoDto);
+    return this.gradoService.update(id, updateGradoDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.gradoService.remove(+id);
+    return this.gradoService.remove(id);
   }
 }

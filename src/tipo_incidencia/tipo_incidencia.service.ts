@@ -23,13 +23,13 @@ export class TipoIncidenciaService {
       const {descripcion, grado, user_id, id} = createTipoIncidenciaDto
 
       const user = await this.userService.findOne(user_id)
-      const gradoObj = await this.gradoService.findOne(+grado)
+      const gradoObj = await this.gradoService.findOne(grado)
       if(!user || !gradoObj){
         throw new NotFoundException('Dependencies not found')
       }
 
       const tipoIncidencia = new TipoIncidencia()
-      tipoIncidencia.id = +id
+      tipoIncidencia.id = id
       tipoIncidencia.descripcion = descripcion
       tipoIncidencia.grado = gradoObj
       tipoIncidencia.user = user
@@ -47,15 +47,15 @@ export class TipoIncidenciaService {
     return this.tiRepository.find({relations: ['grado', 'incidencia']});
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.tiRepository.findOne({where: {id}, relations: ['grado']});
   }
 
-  update(id: number, updateTipoIncidenciaDto: UpdateTipoIncidenciaDto) {
+  update(id: string, updateTipoIncidenciaDto: UpdateTipoIncidenciaDto) {
     return `This action updates a #${id} tipoIncidencia`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.tiRepository.delete(id)
   }
 }

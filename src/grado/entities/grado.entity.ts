@@ -5,7 +5,7 @@ import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedCo
 @Entity('Grado')
 export class Grado {
     @PrimaryColumn()
-    id: number
+    id: string
     @Column()
     nombre: string
     @Column()
@@ -15,5 +15,5 @@ export class Grado {
     user: User
 
     @OneToMany(() => TipoIncidencia, (tipoIncidencia) => tipoIncidencia.grado)
-    tipoIncidencia: TipoIncidencia
+    tipoIncidencia: TipoIncidencia[]
 }

@@ -4,7 +4,7 @@ export class CreateTipoIncidenciaDto {
     @IsString()
     user_id: string
     
-    @IsNumberString()
+    @IsString()
     id: string
     @IsNumberString()
     grado: string

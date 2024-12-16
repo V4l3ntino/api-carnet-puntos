@@ -4,7 +4,7 @@ export class CreateGradoDto {
     @IsString()
     user_id: string
 
-    @IsNumberString()
+    @IsString()
     id: string
     
     @IsString()

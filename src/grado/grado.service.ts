@@ -26,7 +26,7 @@ export class GradoService {
       }
 
       const grado = new Grado()
-      grado.id = +id
+      grado.id = id
       grado.cantidadPuntos = +cantidadPuntos
       grado.nombre = nombre
       grado.user = user
@@ -43,15 +43,15 @@ export class GradoService {
     return this.gradoRepository.find();
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.gradoRepository.findOne({where:{id}});
   }
 
-  update(id: number, updateGradoDto: UpdateGradoDto) {
+  update(id: string, updateGradoDto: UpdateGradoDto) {
     return `This action updates a #${id} grado`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return this.gradoRepository.delete(id);
   }
 }

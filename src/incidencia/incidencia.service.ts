@@ -27,7 +27,7 @@ export class IncidenciaService {
 
       const user = await this.userService.findOne(user_id)
       const alumnoProfile = await this.alumnoService.findOne(alumno_id)
-      const tipoIncidenciaObj = await this.tiService.findOne(+tipoIncidencia)
+      const tipoIncidenciaObj = await this.tiService.findOne(tipoIncidencia)
       if(!user || !tipoIncidencia || !alumnoProfile){
         throw new NotFoundException('Dependencies not found')
       }

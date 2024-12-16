@@ -7,7 +7,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn, Primar
 export class TipoIncidencia {
     
     @PrimaryColumn()
-    id: number
+    id: string
     @Column()
     descripcion: string
     @Column()
@@ -17,7 +17,7 @@ export class TipoIncidencia {
     @JoinColumn()
     user: User
 
-    @ManyToOne(() => Grado, (grado) => grado.tipoIncidencia)
+    @ManyToOne(() => Grado, (grado) => grado.tipoIncidencia, {onDelete: 'SET NULL'})
     grado: Grado
 
     @OneToMany(() => Incidencia, (incidencia) => incidencia.tipoIncidencia)

@@ -8,15 +8,20 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 export class TipoIncidenciaController {
   constructor(private readonly tipoIncidenciaService: TipoIncidenciaService) {}
 
-  @Post()
-  @UseGuards(AuthGuard)
-  create(@Body() createTipoIncidenciaDto: CreateTipoIncidenciaDto, @Request() request) {
-    const insert = request.user?.permisos.find((item) => item.tipo == "i")
+  // @Post()
+  // @UseGuards(AuthGuard)
+  // create(@Body() createTipoIncidenciaDto: CreateTipoIncidenciaDto, @Request() request) {
+  //   const insert = request.user?.permisos.find((item) => item.tipo == "i")
 
-    if(insert.tipo_incidencia){
-      return this.tipoIncidenciaService.create(createTipoIncidenciaDto);
-    }
-    return new ForbiddenException()
+  //   if(insert.tipo_incidencia){
+  //     return this.tipoIncidenciaService.create(createTipoIncidenciaDto);
+  //   }
+  //   return new ForbiddenException()
+  // }
+
+  @Post()
+  create(@Body() createTipoIncidenciaDto: CreateTipoIncidenciaDto) {
+    return this.tipoIncidenciaService.create(createTipoIncidenciaDto);
   }
 
   @Get()
@@ -26,16 +31,16 @@ export class TipoIncidenciaController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.tipoIncidenciaService.findOne(+id);
+    return this.tipoIncidenciaService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTipoIncidenciaDto: UpdateTipoIncidenciaDto) {
-    return this.tipoIncidenciaService.update(+id, updateTipoIncidenciaDto);
+    return this.tipoIncidenciaService.update(id, updateTipoIncidenciaDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.tipoIncidenciaService.remove(+id);
+    return this.tipoIncidenciaService.remove(id);
   }
 }

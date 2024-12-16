@@ -20,6 +20,6 @@ export class Incidencia {
     @ManyToOne(() => AlumnoProfile, (alumnoProfile) => alumnoProfile.incidencia, {onDelete: 'CASCADE'})
     alumnoProfile: AlumnoProfile
 
-    @ManyToOne(() => TipoIncidencia, (tipoIncidencia) => tipoIncidencia.incidencia)
+    @ManyToOne(() => TipoIncidencia, (tipoIncidencia) => tipoIncidencia.incidencia, {onDelete: 'SET NULL'})
     tipoIncidencia: TipoIncidencia
 }   

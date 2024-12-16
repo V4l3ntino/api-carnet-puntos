@@ -11,6 +11,6 @@ export class CreateIncidenciaDto {
     alumno_id: string
     @IsString()
     descripcion: string
-    @IsNumberString()
+    @IsString()
     tipoIncidencia: string
 }
