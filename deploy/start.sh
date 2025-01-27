@@ -15,7 +15,7 @@ elif [[ $1 = "down" ]]
 then
     echo "Apagar"
     docker-compose --env-file ${rutaEnv} -f docker-compose.yml down
-elif [[ $1 = "config" ]] 
+elif [[ $1 = "config"  ]] 
 then
     echo "Configurar"
     docker-compose --env-file ${rutaEnv} -f docker-compose.yml config
