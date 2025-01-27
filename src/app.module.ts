@@ -19,6 +19,7 @@ import { PermisosModule } from './permisos/permisos.module';
 import { AuthModule } from './auth/auth.module';
 import { SeedController } from './seed/seed.controller';
 import { SeedModule } from './seed/seed.module';
+import { GateWayModule } from './websockets/websockets.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { SeedModule } from './seed/seed.module';
       autoLoadEntities: true,
       synchronize: true
     }),
+    GateWayModule,
     UserModule,
     CuentaPuntosModule,
     TablasModule,
