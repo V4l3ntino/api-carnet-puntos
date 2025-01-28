@@ -1,6 +1,7 @@
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import {Server, Socket} from 'socket.io'
 import { AlumnoProfileService } from "src/alumno_profile/alumno_profile.service";
+import { CreateIncidenciaDto } from "src/incidencia/dto/create-incidencia.dto";
 import { Incidencia } from "src/incidencia/entities/incidencia.entity";
 import { IncidenciaService } from "src/incidencia/incidencia.service";
 import { ProfesorProfileService } from "src/profesor_profile/profesor_profile.service";
@@ -39,12 +40,13 @@ export class WebsocketsGateway implements OnGatewayConnection, OnGatewayDisconne
     }
 
     @SubscribeMessage('newIncidencia')
-    async newIncidencia(@ConnectedSocket() client: Socket, @MessageBody() data: any){
-        console.log(data)
+    async newIncidencia(@ConnectedSocket() client: Socket, @MessageBody() data: CreateIncidenciaDto){
+        // console.log(data)
         await this.incidenciaService.create(data)
-        const INCIDENCIAS: Incidencia[] = await this.incidenciaService.findAll()
-        console.log(INCIDENCIAS)
-        client.broadcast.emit('incidenciasList', INCIDENCIAS)    
+        // const INCIDENCIAS: Incidencia[] = await this.incidenciaService.findAll()
+        const INCIDENCIA: Incidencia = await this.incidenciaService.findOne(data.id)
+        // console.log(INCIDENCIAS)
+        client.broadcast.emit('incidencia', INCIDENCIA)
     }
 
     @SubscribeMessage('getIncidencias')

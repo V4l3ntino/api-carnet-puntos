@@ -59,7 +59,7 @@ export class IncidenciaService {
   }
 
   findOne(id: string) {
-    return this.iRepository.findOneBy({id});
+    return this.iRepository.findOne({where: {id}, relations: ['user', 'user.profile', 'alumnoProfile', 'alumnoProfile.user.profile', 'tipoIncidencia', 'tipoIncidencia.grado']});
   }
 
   update(id: string, updateIncidenciaDto: UpdateIncidenciaDto) {
