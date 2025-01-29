@@ -49,6 +49,12 @@ export class WebsocketsGateway implements OnGatewayConnection, OnGatewayDisconne
         client.broadcast.emit('incidencia', INCIDENCIA)
     }
 
+    @SubscribeMessage('deleteIncidencia')
+    async deleteIncidencia(@ConnectedSocket() client: Socket, @MessageBody() id: string){
+        await this.incidenciaService.remove(id)
+        client.broadcast.emit('idIncidencia', id)
+    }
+
     @SubscribeMessage('getIncidencias')
     async getIncidencias(@ConnectedSocket() client: Socket) {
         const incidencias = await this.incidenciaService.findAll();
