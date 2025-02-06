@@ -20,10 +20,16 @@ import { AuthModule } from './auth/auth.module';
 import { SeedController } from './seed/seed.controller';
 import { SeedModule } from './seed/seed.module';
 import { GateWayModule } from './websockets/websockets.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver, // Usa ApolloDriver en lugar de @apollo/server
+      autoSchemaFile: true, // Genera automáticamente el esquema de GraphQL
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
