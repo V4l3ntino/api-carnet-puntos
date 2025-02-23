@@ -5,7 +5,7 @@ import { CreateTablaDto } from 'src/tablas/dto/create-tabla.dto';
 
 export const newMessage = (value:string, status:number) => {
     const message: messageResponse = {
-        msg: value,
+        message: value,
         status: status
     }
     return message

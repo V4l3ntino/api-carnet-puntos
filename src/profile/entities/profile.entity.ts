@@ -12,9 +12,6 @@ export class Profile {
     @Column({nullable: true, default: null})
     avatar?: string;
 
-    @Column({unique: true, nullable: true, default: null})
-    email?: string;
-
     @OneToOne(() => User, {onDelete: 'CASCADE'})
     @JoinColumn()
     user: User

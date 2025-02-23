@@ -25,6 +25,7 @@ export class AuthService {
                     sub: user.id,
                     username: user.username,
                     fullName: user.profile.fullName,
+                    email: user.email,
                     rolname: user.permiso?.nombre,
                     permisos: user.permiso?.tabla
                 }

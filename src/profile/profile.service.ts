@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { HttpException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './entities/profile.entity';
@@ -27,13 +27,13 @@ export class ProfileService {
       profile.ida = `${user.id}`
       await this.pRepository.save(profile);
       
-      return newMessage('Profile created',200)
+      return newMessage('Profile createdasdfa',200)
     } catch (error) {
       if(error instanceof NotFoundException){
         throw error
       }
       if(error.code == 23505){
-        return newMessage('Email already exists', 500)
+        throw new HttpException("El email ya existe", 400);
       }
       throw new InternalServerErrorException("Error creating profile")
     }

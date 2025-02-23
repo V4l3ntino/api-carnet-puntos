@@ -1,4 +1,4 @@
 interface messageResponse {
-    msg: string,
+    message: string,
     status: number
 }

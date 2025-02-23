@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { HttpException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -29,11 +29,11 @@ export class UserService {
       user.id = uuid
       user.permiso = rol
       user.username = username
+      user.email = email
       user.password = await hashPassword(password);
       await this.uRepository.save(user);
       const profile:CreateProfileDto = {
         userId: uuid,
-        email: email,
         fullName: fullName,
       }
       const request = await fetch("http://localhost:3000/api/profile/",{
@@ -44,6 +44,9 @@ export class UserService {
         body: JSON.stringify(profile)
       })
       const requestData = await request.json()
+      // if(!requestData.ok){
+      //   throw new HttpException(`${requestData.message}`, 400)
+      // }
       console.log(requestData)
 
       return newMessage('User created', 200);
@@ -51,7 +54,10 @@ export class UserService {
     } catch (error) {
       console.log(error);
       if(error.code == 23505){
-         return newMessage('User already exists', 500)
+         throw new HttpException("El nombre de usuario o email ya existe", 400);
+      }
+      if(error.status == 400){
+        throw new HttpException(error.message,400)
       }
       throw new InternalServerErrorException("Error creating user")
     }

@@ -10,10 +10,6 @@ export class CreateProfileDto {
     @IsOptional()
     avatar?: string;
 
-    @IsEmail()
-    @IsOptional()
-    email: string;
-
     @IsString()
     userId: string;
 }
