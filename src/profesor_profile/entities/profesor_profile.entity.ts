@@ -17,9 +17,9 @@ export class ProfesorProfile {
     @JoinColumn()
     user: User;
 
-    @OneToOne(() => Permiso)
-    @JoinColumn()
-    permiso: Permiso
+    // @OneToOne(() => Permiso)
+    // @JoinColumn()
+    // permiso: Permiso
 
     @OneToOne(() => Grupo, {onDelete:'SET NULL'})
     @JoinColumn()

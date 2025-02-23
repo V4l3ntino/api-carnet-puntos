@@ -21,9 +21,7 @@ export class AlumnoProfileService {
     @InjectRepository(AlumnoProfile)
     private readonly aprofileRepository: Repository<AlumnoProfile>,
     private readonly uService: UserService,
-    private readonly permService: PermisosService,
-    private readonly grupoService: GrupoService,
-    
+    private readonly grupoService: GrupoService,    
     private readonly cuentaPuntosService: CuentaPuntosService
   ){}
 
@@ -42,92 +40,91 @@ export class AlumnoProfileService {
         throw new NotImplementedException("The user account is an administrator, we cant make him a student profile")
       }
       const uuid = uuidv4()
-      const permisos: CreatePermisoDto = {
-        id: uuid,
-        tablas: [
-          {
-            tipo: "r",
-            admin_profile: false,
-            alumno_profile: false,
-            cuenta_puntos: true,
-            grado: false,
-            grupo: true,
-            incidencia: true,
-            permiso_id: uuid,
-            permisos: false,
-            profesor_profile: false,
-            profile: false,
-            retrasos: true,
-            tablas: false,
-            tipo_incidencia: false,
-            user: false
-          },
-          {
-            tipo: "w",
-            admin_profile: false,
-            alumno_profile: true,
-            cuenta_puntos: false,
-            grado: false,
-            grupo: false,
-            incidencia: false,
-            permiso_id: uuid,
-            permisos: false,
-            profesor_profile: false,
-            profile: false,
-            retrasos: false,
-            tablas: false,
-            tipo_incidencia: false,
-            user: false
-          },
-          {
-            tipo: "i",
-            admin_profile: false,
-            alumno_profile: false,
-            cuenta_puntos: false,
-            grado: false,
-            grupo: false,
-            incidencia: false,
-            permiso_id: uuid,
-            permisos: false,
-            profesor_profile: false,
-            profile: false,
-            retrasos: false,
-            tablas: false,
-            tipo_incidencia: false,
-            user: false
-          },
-          {
-            tipo: "d",
-            admin_profile: false,
-            alumno_profile: false,
-            cuenta_puntos: false,
-            grado: false,
-            grupo: false,
-            incidencia: false,
-            permiso_id: uuid,
-            permisos: false,
-            profesor_profile: false,
-            profile: false,
-            retrasos: false,
-            tablas: false,
-            tipo_incidencia: false,
-            user: false
-          },
-        ]
-      }
+      // const permisos: CreatePermisoDto = {
+      //   id: uuid,
+      //   tablas: [
+      //     {
+      //       tipo: "r",
+      //       admin_profile: false,
+      //       alumno_profile: false,
+      //       cuenta_puntos: true,
+      //       grado: false,
+      //       grupo: true,
+      //       incidencia: true,
+      //       permiso_id: uuid,
+      //       permisos: false,
+      //       profesor_profile: false,
+      //       profile: false,
+      //       retrasos: true,
+      //       tablas: false,
+      //       tipo_incidencia: false,
+      //       user: false
+      //     },
+      //     {
+      //       tipo: "w",
+      //       admin_profile: false,
+      //       alumno_profile: true,
+      //       cuenta_puntos: false,
+      //       grado: false,
+      //       grupo: false,
+      //       incidencia: false,
+      //       permiso_id: uuid,
+      //       permisos: false,
+      //       profesor_profile: false,
+      //       profile: false,
+      //       retrasos: false,
+      //       tablas: false,
+      //       tipo_incidencia: false,
+      //       user: false
+      //     },
+      //     {
+      //       tipo: "i",
+      //       admin_profile: false,
+      //       alumno_profile: false,
+      //       cuenta_puntos: false,
+      //       grado: false,
+      //       grupo: false,
+      //       incidencia: false,
+      //       permiso_id: uuid,
+      //       permisos: false,
+      //       profesor_profile: false,
+      //       profile: false,
+      //       retrasos: false,
+      //       tablas: false,
+      //       tipo_incidencia: false,
+      //       user: false
+      //     },
+      //     {
+      //       tipo: "d",
+      //       admin_profile: false,
+      //       alumno_profile: false,
+      //       cuenta_puntos: false,
+      //       grado: false,
+      //       grupo: false,
+      //       incidencia: false,
+      //       permiso_id: uuid,
+      //       permisos: false,
+      //       profesor_profile: false,
+      //       profile: false,
+      //       retrasos: false,
+      //       tablas: false,
+      //       tipo_incidencia: false,
+      //       user: false
+      //     },
+      //   ]
+      // }
       const cuentaPuntosDto: CreateCuentaPuntoDto = {
         id: user.id,
         cantidad: 100
       }
 
-      const permiso = await this.permService.create(permisos)
+      // const permiso = await this.permService.create(permisos)
       const cuentaPuntos: CuentaPunto = await this.cuentaPuntosService.create(cuentaPuntosDto)
 
       const alumnoProfile: AlumnoProfile = new AlumnoProfile()
       alumnoProfile.created_at = getDateNow()
       alumnoProfile.idea = user.id
       alumnoProfile.user = user
-      alumnoProfile.permiso = permiso
       alumnoProfile.repetidor = repetidor
       alumnoProfile.edad = calcularEdad(fechaNacimiento)
       alumnoProfile.grupo = grupo
@@ -150,11 +147,11 @@ export class AlumnoProfileService {
   }
 
   findAll() {
-    return this.aprofileRepository.find({relations: ['user.profile', 'permiso', 'permiso.tabla', 'grupo', 'incidencia', 'incidencia.tipoIncidencia.grado', 'cuentaPuntos']})
+    return this.aprofileRepository.find({relations: ['user.profile', 'grupo', 'incidencia', 'incidencia.tipoIncidencia.grado', 'cuentaPuntos']})
   }
 
   async findOne(idea: string) {
-    return await this.aprofileRepository.findOne({where:{idea},relations: ['user', 'permiso', 'permiso.tabla', 'cuentaPuntos']})
+    return await this.aprofileRepository.findOne({where:{idea},relations: ['user.profile', 'grupo', 'incidencia', 'incidencia.tipoIncidencia.grado', 'cuentaPuntos']})
   }
 
   update(id: string, updateAlumnoProfileDto: UpdateAlumnoProfileDto) {
@@ -172,10 +169,9 @@ export class AlumnoProfileService {
 
   async remove(idea: string) {
     try {
-      const alumnoProfile = await this.aprofileRepository.findOne({where: {idea}, relations: ['permiso']})
+      const alumnoProfile = await this.aprofileRepository.findOne({where: {idea}})
 
       await this.aprofileRepository.delete(idea);
-      await this.permService.remove(alumnoProfile.permiso.id)
       await this.cuentaPuntosService.remove(idea)
       return newMessage("success", 200)
     } catch (error) {

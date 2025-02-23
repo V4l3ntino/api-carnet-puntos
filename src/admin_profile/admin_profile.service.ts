@@ -6,7 +6,6 @@ import { AdminProfile } from './entities/admin_profile.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/user/user.service';
 import { getDateNow, newMessage } from 'functions/functions';
-import { CreatePermisoDto } from 'src/permisos/dto/create-permiso.dto';
 import { PermisosService } from 'src/permisos/permisos.service';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -30,86 +29,85 @@ export class AdminProfileService {
         throw new NotImplementedException("The user account is a student, we cant make him an administrator")
       }
       const uuid = uuidv4()
-      const permisos: CreatePermisoDto = {
-        id: uuid,
-        tablas: [
-          {
-            tipo: "r",
-            admin_profile: true,
-            alumno_profile: true,
-            cuenta_puntos: true,
-            grado: true,
-            grupo: true,
-            incidencia: true,
-            permiso_id: uuid,
-            permisos: true,
-            profesor_profile: true,
-            profile: true,
-            retrasos: true,
-            tablas: true,
-            tipo_incidencia: true,
-            user: true
-          },
-          {
-            tipo: "w",
-            admin_profile: true,
-            alumno_profile: true,
-            cuenta_puntos: true,
-            grado: true,
-            grupo: true,
-            incidencia: true,
-            permiso_id: uuid,
-            permisos: true,
-            profesor_profile: true,
-            profile: true,
-            retrasos: true,
-            tablas: true,
-            tipo_incidencia: true,
-            user: true
-          },
-          {
-            tipo: "i",
-            admin_profile: true,
-            alumno_profile: true,
-            cuenta_puntos: true,
-            grado: true,
-            grupo: true,
-            incidencia: true,
-            permiso_id: uuid,
-            permisos: true,
-            profesor_profile: true,
-            profile: true,
-            retrasos: true,
-            tablas: true,
-            tipo_incidencia: true,
-            user: true
-          },
-          {
-            tipo: "d",
-            admin_profile: true,
-            alumno_profile: true,
-            cuenta_puntos: true,
-            grado: true,
-            grupo: true,
-            incidencia: true,
-            permiso_id: uuid,
-            permisos: true,
-            profesor_profile: true,
-            profile: true,
-            retrasos: true,
-            tablas: true,
-            tipo_incidencia: true,
-            user: true
-          },
-        ]
-      }
-      const permiso = await this.permService.create(permisos)
+      // const permisos: CreatePermisoDto = {
+      //   id: uuid,
+      //   tablas: [
+      //     {
+      //       tipo: "r",
+      //       admin_profile: true,
+      //       alumno_profile: true,
+      //       cuenta_puntos: true,
+      //       grado: true,
+      //       grupo: true,
+      //       incidencia: true,
+      //       permiso_id: uuid,
+      //       permisos: true,
+      //       profesor_profile: true,
+      //       profile: true,
+      //       retrasos: true,
+      //       tablas: true,
+      //       tipo_incidencia: true,
+      //       user: true
+      //     },
+      //     {
+      //       tipo: "w",
+      //       admin_profile: true,
+      //       alumno_profile: true,
+      //       cuenta_puntos: true,
+      //       grado: true,
+      //       grupo: true,
+      //       incidencia: true,
+      //       permiso_id: uuid,
+      //       permisos: true,
+      //       profesor_profile: true,
+      //       profile: true,
+      //       retrasos: true,
+      //       tablas: true,
+      //       tipo_incidencia: true,
+      //       user: true
+      //     },
+      //     {
+      //       tipo: "i",
+      //       admin_profile: true,
+      //       alumno_profile: true,
+      //       cuenta_puntos: true,
+      //       grado: true,
+      //       grupo: true,
+      //       incidencia: true,
+      //       permiso_id: uuid,
+      //       permisos: true,
+      //       profesor_profile: true,
+      //       profile: true,
+      //       retrasos: true,
+      //       tablas: true,
+      //       tipo_incidencia: true,
+      //       user: true
+      //     },
+      //     {
+      //       tipo: "d",
+      //       admin_profile: true,
+      //       alumno_profile: true,
+      //       cuenta_puntos: true,
+      //       grado: true,
+      //       grupo: true,
+      //       incidencia: true,
+      //       permiso_id: uuid,
+      //       permisos: true,
+      //       profesor_profile: true,
+      //       profile: true,
+      //       retrasos: true,
+      //       tablas: true,
+      //       tipo_incidencia: true,
+      //       user: true
+      //     },
+      //   ]
+      // }
+      // const permiso = await this.permService.create(permisos)
 
       const adminProfile: AdminProfile = new AdminProfile()
       adminProfile.created_at = getDateNow()
       adminProfile.idea = user.id
       adminProfile.user = user
-      adminProfile.permiso = permiso
       this.adminRepository.save(adminProfile);
       
 
@@ -128,14 +126,14 @@ export class AdminProfileService {
 
   async findAll() {
     try {
-      return await this.adminRepository.find({relations: ['user.profile','permiso', 'permiso.tabla']})
+      return await this.adminRepository.find({relations: ['user.profile']})
     } catch (error) {
       throw new InternalServerErrorException("Error to find all admins profiles")
     }
   }
 
   findOne(idea: string) {
-    return this.adminRepository.findOne({where: {idea}, relations: ['user', 'permiso', 'permiso.tabla']})
+    return this.adminRepository.findOne({where: {idea}, relations: ['user.profile']})
   }
 
   update(id: number, updateAdminProfileDto: UpdateAdminProfileDto) {
@@ -144,10 +142,8 @@ export class AdminProfileService {
 
   async remove(idea: string) {
     try {
-      const adminProfile = await this.adminRepository.findOne({where: {idea}, relations: ['permiso']})
-
+      const adminProfile = await this.adminRepository.findOne({where: {idea}})
       await this.adminRepository.delete(idea);
-      await this.permService.remove(adminProfile.permiso.id)
       return newMessage("success", 200)
     } catch (error) {
       throw error

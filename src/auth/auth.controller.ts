@@ -4,6 +4,7 @@ import { LoginUserDto } from 'src/user/dto/login-user.dto';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './guards/auth.guard';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -23,6 +24,12 @@ export class AuthController {
         } catch (error) {
             throw error
         }
+    }
+
+    @Post("/sign-up")
+    async signUp(@Body() userNew: CreateUserDto){
+        const response = await this.authService.signUp(userNew)
+        return response;
     }
 
     @UseGuards(AuthGuard)

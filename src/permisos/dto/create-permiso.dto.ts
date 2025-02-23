@@ -6,6 +6,10 @@ export class CreatePermisoDto {
 
     @IsString()
     id: string;
+    @IsString()
+    nombre: string
+    @IsString()
+    descripcion: string
 
     @IsArray()
     @ValidateNested({each: true}) // Valida que cada elemento del array sea un objeto válido

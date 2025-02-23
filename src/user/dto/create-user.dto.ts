@@ -10,4 +10,13 @@ export class CreateUserDto {
     @IsStrongPassword()
     password: string;
 
+    @IsString()
+    permiso: string
+
+    @IsString()
+    fullName: string
+
+    @IsString()
+    email: string
+
 }

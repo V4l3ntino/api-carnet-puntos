@@ -9,6 +9,7 @@ import seedGrados from './data/grado.json'
 import seedTipoIncidencias from './data/tipoIncidencia.json'
 import seedIncidencias from './data/incidencias.json'
 import seedProfiles from './data/profile.json'
+import seedRoles from './data/roles.json'
 
 import { User } from 'src/user/entities/user.entity';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
@@ -30,6 +31,9 @@ import { ProfileService } from 'src/profile/profile.service';
 import { CreateProfileDto } from 'src/profile/dto/create-profile.dto';
 import { Grupo } from 'src/grupo/entities/grupo.entity';
 import { newMessage } from 'functions/functions';
+import { CreatePermisoDto } from 'src/permisos/dto/create-permiso.dto';
+import { PermisosService } from 'src/permisos/permisos.service';
+import { Permiso } from 'src/permisos/entities/permiso.entity';
 
 @Injectable()
 export class SeedService {
@@ -42,32 +46,61 @@ export class SeedService {
         private readonly gradoService: GradoService,
         private readonly tipoIncidenciaService: TipoIncidenciaService,
         private readonly incidenciasService: IncidenciaService,
-        private readonly profileService: ProfileService
+        private readonly profileService: ProfileService,
+        private readonly permisoService: PermisosService
+
     ){}
 
     public async deleteData(){
-        const users = await this.userService.findAll()
-        const grupos = await this.grupoService.findAll()
-        
-        const promises = []
+        try {
+            const users = await this.userService.findAll();
+            const grupos = await this.grupoService.findAll();
+            const permisos = await this.permisoService.findAll();
+            const grados = await this.gradoService.findAll()
+            const tipoIncidencias = await this.tipoIncidenciaService.findAll()
+            const incidencias = await this.incidenciasService.findAll()
 
-        users.forEach((item) => {
-            promises.push((item: User) => {
-                this.userService.remove(item.id)
+    
+            const promises = [];
+    
+            // Eliminación de usuarios
+            users.forEach((item) => {
+                promises.push(this.userService.remove(item.id));
+            });
+    
+            // Eliminación de grupos
+            grupos.forEach((item) => {
+                promises.push(this.grupoService.remove(item.id));
+            });
+    
+            // Eliminación de permisos
+            permisos.forEach((item) => {
+                promises.push(this.permisoService.remove(item.id));
+            });
+
+            incidencias.forEach((item) => {
+                promises.push(this.incidenciasService.remove(item.id))
             })
-        })
-        
-        grupos.forEach((item) => {
-            promises.push((item:Grupo) => {
-                this.grupoService.remove(item.id)
+            tipoIncidencias.forEach((item) => {
+                promises.push(this.tipoIncidenciaService.remove(item.id))
             })
-        })
-        
-        await Promise.all(promises)
-        return newMessage("success", 200)
+    
+            grados.forEach((item) => {
+                promises.push(this.gradoService.remove(item.id))
+            })
+    
+            // Esperar a que todas las promesas se resuelvan
+            await Promise.all(promises);
+    
+            return newMessage("success", 200);
+        } catch (error) {
+            console.error("Error al eliminar datos:", error);
+            return newMessage("error", 500);
+        }
     }
 
     public async loadData(){
+        const roles = await this.insertRoles()
         const users =  await this.insertUsers()
         const admins = await this.insertAdmins()
         const grupos = await this.inserGrupos()
@@ -79,6 +112,7 @@ export class SeedService {
         const profiles = await this.insertProfiles()
 
         return {
+            roles,
             users,
             admins,
             grupos,
@@ -89,6 +123,16 @@ export class SeedService {
             incdiencias,
             profiles
         }
+    }
+
+    private async insertRoles(){
+        const insertRoles = [];
+        seedRoles.forEach((rol: CreatePermisoDto) => {
+            insertRoles.push(this.permisoService.create(rol))
+        })
+
+        await Promise.all(insertRoles)
+        return true;
     }
 
     private async insertUsers(){

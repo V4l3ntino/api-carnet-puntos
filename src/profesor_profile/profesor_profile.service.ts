@@ -17,13 +17,13 @@ export class ProfesorProfileService {
     @InjectRepository(ProfesorProfile)
     private readonly pprofileRepository: Repository<ProfesorProfile>,
     private readonly userService: UserService,
-    private readonly permisoService: PermisosService,
+    // private readonly permisoService: PermisosService,
     private readonly grupoService: GrupoService
   ){}
 
   async create(createProfesorProfileDto: CreateProfesorProfileDto) {
     try {
-      const { id, materia, tablas, grupo_id } = createProfesorProfileDto
+      const { id, materia, grupo_id} = createProfesorProfileDto
 
       const user = await this.userService.findOne(id)
       const grupo = await this.grupoService.findOne(+grupo_id)
@@ -36,12 +36,12 @@ export class ProfesorProfileService {
         throw new NotImplementedException("The user account is a student, we cant make him a profesor profile")
       }
 
-      const permisos: CreatePermisoDto = {
-        id: user.id,
-        tablas
-      }
+      // const permisos: CreatePermisoDto = {
+      //   id: user.id,
+      //   tablas
+      // }
 
-      const permiso = await this.permisoService.create(permisos)
+      // const permiso = await this.permisoService.create(permisos)
 
       const profesorProfile: ProfesorProfile = new ProfesorProfile()
 
@@ -49,7 +49,6 @@ export class ProfesorProfileService {
       profesorProfile.created_at = getDateNow()
       profesorProfile.materia = materia
       profesorProfile.user = user
-      profesorProfile.permiso = permiso
       profesorProfile.grupo = grupo
 
       this.pprofileRepository.save(profesorProfile)
@@ -68,11 +67,11 @@ export class ProfesorProfileService {
   }
 
   findAll() {
-    return this.pprofileRepository.find({relations: ['user', 'user.profile', 'permiso', 'permiso.tabla', 'grupo', 'grupo.alumnos']})
+    return this.pprofileRepository.find({relations: ['user', 'user.profile', 'grupo', 'grupo.alumnos']})
   }
 
   findOne(idea: string) {
-    return this.pprofileRepository.findOne({where: {idea}, relations: ['user', 'permiso', 'permiso.tabla']})
+    return this.pprofileRepository.findOne({where: {idea}, relations: ['user', 'user.profile', 'grupo', 'grupo.alumnos']})
   }
 
   update(id: string, updateProfesorProfileDto: UpdateProfesorProfileDto) {
@@ -81,10 +80,8 @@ export class ProfesorProfileService {
 
   async remove(idea: string) {
     try {
-      const profesorProfile = await this.pprofileRepository.findOne({where: {idea}, relations: ['permiso']})
-
+      const profesorProfile = await this.pprofileRepository.findOne({where: {idea}})
       await this.pprofileRepository.delete(idea);
-      await this.permisoService.remove(profesorProfile.permiso.id)
       return newMessage("success", 200)
     } catch (error) {
       throw error

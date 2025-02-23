@@ -11,4 +11,5 @@ export class CreateAlumnoProfileDto {
     
     @IsNumberString()
     grupo_id: string
+
 }

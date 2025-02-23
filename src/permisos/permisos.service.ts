@@ -18,9 +18,11 @@ export class PermisosService {
   
   async create(createPermisoDto: CreatePermisoDto) {
     try {
-      const {id, tablas} = createPermisoDto
+      const {id, tablas, descripcion, nombre} = createPermisoDto
       const permiso = new Permiso()
       permiso.id = id
+      permiso.descripcion = descripcion
+      permiso.nombre = nombre
 
       await this.permRepository.save(permiso)
 
@@ -47,7 +49,7 @@ export class PermisosService {
   }
 
   findOne(id: string) {
-    return this.permRepository.findOne({where: {id}, relations: ['admin_profile', 'profesor_profile']})
+    return this.permRepository.findOne({where: {id}})
   }
 
   update(id: number, updatePermisoDto: UpdatePermisoDto) {

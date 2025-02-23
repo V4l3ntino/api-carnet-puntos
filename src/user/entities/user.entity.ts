@@ -3,10 +3,11 @@ import { AlumnoProfile } from "src/alumno_profile/entities/alumno_profile.entity
 import { Grado } from "src/grado/entities/grado.entity";
 import { Grupo } from "src/grupo/entities/grupo.entity";
 import { Incidencia } from "src/incidencia/entities/incidencia.entity";
+import { Permiso } from "src/permisos/entities/permiso.entity";
 import { ProfesorProfile } from "src/profesor_profile/entities/profesor_profile.entity";
 import { Profile } from "src/profile/entities/profile.entity";
 import { TipoIncidencia } from "src/tipo_incidencia/entities/tipo_incidencia.entity";
-import { Column, Entity, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('User')
 export class User {
@@ -44,5 +45,10 @@ export class User {
 
     @OneToMany(() => Incidencia, (incidencia) => incidencia.user)
     incidencia: Incidencia[]
+
+    @ManyToOne(() => Permiso, (permiso) => permiso.user, { onDelete: "SET NULL" })
+    @JoinColumn()
+    permiso: Permiso
+
 
 }

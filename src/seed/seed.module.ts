@@ -10,6 +10,7 @@ import { GradoModule } from 'src/grado/grado.module';
 import { TipoIncidenciaModule } from 'src/tipo_incidencia/tipo_incidencia.module';
 import { IncidenciaModule } from 'src/incidencia/incidencia.module';
 import { ProfileModule } from 'src/profile/profile.module';
+import { PermisosModule } from 'src/permisos/permisos.module';
 
 @Module({
   controllers: [SeedController],
@@ -22,7 +23,8 @@ import { ProfileModule } from 'src/profile/profile.module';
     GradoModule,
     TipoIncidenciaModule,
     IncidenciaModule,
-    ProfileModule
+    ProfileModule,
+    PermisosModule
   ]
 })
 export class SeedModule {}

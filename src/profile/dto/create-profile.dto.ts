@@ -4,7 +4,7 @@ export class CreateProfileDto {
 
     @IsString()
     @IsOptional()
-    fullName?: string;
+    fullName: string;
 
     @IsString()
     @IsOptional()
@@ -12,7 +12,7 @@ export class CreateProfileDto {
 
     @IsEmail()
     @IsOptional()
-    email?: string;
+    email: string;
 
     @IsString()
     userId: string;

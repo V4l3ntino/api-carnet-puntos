@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { veryPassword } from 'functions/functions';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { LoginUserDto } from 'src/user/dto/login-user.dto';
 import { UserService } from 'src/user/user.service';
 
@@ -20,28 +21,32 @@ export class AuthService {
                 throw new UnauthorizedException()
             }
             if(await veryPassword(loginUserDto.password,user.password)){
-                let permisos = user.adminProfile?.permiso.tabla
-                if(permisos == null){
-                    permisos = user.profesorProfile?.permiso.tabla
-                }
-                if(permisos == null){
-                    permisos = user.alumnoProfile?.permiso.tabla
-                }
                 const tokenPayload = {
                     sub: user.id,
                     username: user.username,
-                    permisos: permisos
+                    fullName: user.profile.fullName,
+                    rolname: user.permiso?.nombre,
+                    permisos: user.permiso?.tabla
                 }
                 const accessToken = await this.jwtService.signAsync(tokenPayload);
 
                 return {
                     accessToken: accessToken,
-                    userId: user.id,
-                    username: user.username,
-                    permisos: permisos
+                    // userId: user.id,
+                    // username: user.username,
+                    // permisos: permisos
                 }
             }
 
+        } catch (error) {
+            throw error
+        }
+    }
+
+    async signUp(newUser: CreateUserDto){
+        try {
+            const response = this.userService.create(newUser)
+            return response
         } catch (error) {
             throw error
         }

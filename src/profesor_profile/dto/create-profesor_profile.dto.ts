@@ -11,10 +11,13 @@ export class CreateProfesorProfileDto {
     @IsNumberString()
     grupo_id: string
 
-    @IsArray()
-    @ValidateNested({each: true}) // Valida que cada elemento del array sea un objeto válido
-    @Type(() => CreateTablaDto) //Transorma cada objeto a una instancia de CreateTablaDto
-    @ArrayMinSize(4)
-    @ArrayMaxSize(4)
-    tablas: CreateTablaDto[]
+    // @IsString()
+    // permiso: string
+
+    // @IsArray()
+    // @ValidateNested({each: true}) // Valida que cada elemento del array sea un objeto válido
+    // @Type(() => CreateTablaDto) //Transorma cada objeto a una instancia de CreateTablaDto
+    // @ArrayMinSize(4)
+    // @ArrayMaxSize(4)
+    // tablas: CreateTablaDto[]
 }

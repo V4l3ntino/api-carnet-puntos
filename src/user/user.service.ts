@@ -5,29 +5,36 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { deleteUserAccount, getDateNow, hashPassword, newMessage, veryPassword } from 'functions/functions';
-import { v4 as uuidv4 } from 'uuid';
 import { CreateProfileDto } from 'src/profile/dto/create-profile.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { format } from 'date-fns';
+import { PermisosService } from 'src/permisos/permisos.service';
 @Injectable()
 export class UserService {
 
   constructor(
      @InjectRepository(User)
-     private readonly uRepository: Repository<User>
+     private readonly uRepository: Repository<User>,
+     private readonly permisoService: PermisosService
   ){}
 
   async create(createUserDto: CreateUserDto) {
     try {
-      const {password, username, uuid} = createUserDto
+      const {password, username, uuid, permiso, email, fullName} = createUserDto
       const user = new User()
+      const rol = await this.permisoService.findOne(permiso)
+      if(!rol){
+        throw new Error("Rol of user not found")
+      }
       user.created_at = getDateNow()
       user.id = uuid
+      user.permiso = rol
       user.username = username
       user.password = await hashPassword(password);
       await this.uRepository.save(user);
       const profile:CreateProfileDto = {
-        userId: uuid
+        userId: uuid,
+        email: email,
+        fullName: fullName,
       }
       const request = await fetch("http://localhost:3000/api/profile/",{
         method: 'POST',
@@ -54,15 +61,10 @@ export class UserService {
     try {
       return await this.uRepository.find({relations: [
         'profile', 
-        'adminProfile', 
-        'adminProfile.permiso', 
-        'adminProfile.permiso.tabla',
+        'adminProfile',
         'profesorProfile',
-        'profesorProfile.permiso',
-        'profesorProfile.permiso.tabla',
         'alumnoProfile',
-        'alumnoProfile.permiso',
-        'alumnoProfile.permiso.tabla'
+        'permiso'
       ]})
     } catch (error) {
       console.log(error)
@@ -72,7 +74,7 @@ export class UserService {
 
   async findOne(id: string): Promise<User> {
     try {
-      const user = await this.uRepository.findOne({where:{ id }, relations: ['profile', 'adminProfile', 'profesorProfile', 'alumnoProfile']});
+      const user = await this.uRepository.findOne({where:{ id }, relations: ['profile', 'adminProfile', 'profesorProfile', 'alumnoProfile', 'permiso']});
       if (!user) {
         throw new NotFoundException('User not found');
       }
@@ -92,14 +94,10 @@ export class UserService {
       const user = await this.uRepository.findOne({where: {username}, relations: [
         'profile', 
         'adminProfile', 
-        'adminProfile.permiso', 
-        'adminProfile.permiso.tabla',
         'profesorProfile',
-        'profesorProfile.permiso',
-        'profesorProfile.permiso.tabla',
         'alumnoProfile',
-        'alumnoProfile.permiso',
-        'alumnoProfile.permiso.tabla'        
+        'permiso',
+        'permiso.tabla'
       ]} )
       return user
     } catch (error) {
