@@ -1,5 +1,13 @@
 [
   {
+    "uuid": "4ec0c4d1-bd90-4f55-94b6-79c3b55c4444",
+    "username": "usuario",
+    "password": "usuario",
+    "permiso": "1",
+    "fullName": "Usuario Usuario",
+    "email": "user@email.com"
+  },
+  {
     "uuid": "4ec0c4d1-bd90-4f55-94b6-79c3b55cb761",
     "username": "adminUser",
     "password": "admin123",

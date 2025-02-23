@@ -1,4 +1,4 @@
-import { HttpException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateProfileDto } from './dto/create-profile.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { Profile } from './entities/profile.entity';
@@ -13,6 +13,7 @@ export class ProfileService {
   constructor(
     @InjectRepository(Profile)
     private readonly pRepository: Repository<Profile>,
+    @Inject(forwardRef(() => UserService))
     private readonly uService: UserService
   ){}
 

@@ -1,4 +1,4 @@
-import { HttpException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { forwardRef, HttpException, Inject, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,13 +8,19 @@ import { deleteUserAccount, getDateNow, hashPassword, newMessage, veryPassword }
 import { CreateProfileDto } from 'src/profile/dto/create-profile.dto';
 import { LoginUserDto } from './dto/login-user.dto';
 import { PermisosService } from 'src/permisos/permisos.service';
+import { ProfileService } from 'src/profile/profile.service';
+import { JwtService } from '@nestjs/jwt';
+
 @Injectable()
 export class UserService {
 
   constructor(
      @InjectRepository(User)
      private readonly uRepository: Repository<User>,
-     private readonly permisoService: PermisosService
+     private readonly permisoService: PermisosService,
+     @Inject(forwardRef(() => ProfileService))
+     private readonly profileService: ProfileService,
+     private jwtService: JwtService
   ){}
 
   async create(createUserDto: CreateUserDto) {
@@ -36,18 +42,19 @@ export class UserService {
         userId: uuid,
         fullName: fullName,
       }
-      const request = await fetch("http://localhost:3000/api/profile/",{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'  
-        },
-        body: JSON.stringify(profile)
-      })
-      const requestData = await request.json()
+      // const request = await fetch("http://localhost:3000/api/profile/",{
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'  
+      //   },
+      //   body: JSON.stringify(profile)
+      // })
+      const request = await this.profileService.create(profile)
+
       // if(!requestData.ok){
       //   throw new HttpException(`${requestData.message}`, 400)
       // }
-      console.log(requestData)
+      console.log(request)
 
       return newMessage('User created', 200);
 
@@ -113,20 +120,42 @@ export class UserService {
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     try {
-      const user = await this.uRepository.findOneBy({ id });
+      const user = await this.uRepository.findOne({where:{ id }, relations: ['profile']});
       if (!user) {
         throw new NotFoundException('User not found');
       }
-      Object.assign(user, updateUserDto)
+      // Object.assign(user, updateUserDto)
+      const { email,fullName,username } = updateUserDto
+      user.email = email
+      user.username = username
       await this.uRepository.save(user);
-      return newMessage('User updated', 200);
+      const profile:CreateProfileDto = {
+        userId: user.id,
+        fullName: fullName,
+      }
+      await this.profileService.create(profile)
+      
+      const tokenPayload = {
+        sub: user.id,
+        username: user.username,
+        fullName: fullName,
+        email: user.email,
+        avatar: user.profile.avatar,
+        rolname: user.permiso?.nombre,
+        permisos: user.permiso?.tabla
+      }
+      const accessToken = await this.jwtService.signAsync(tokenPayload);
+
+    return {
+        accessToken: accessToken,
+    }
   
     } catch (error) {
-      console.log(error)
-      if(error instanceof NotFoundException){
-        throw error
+      console.log(error.message)
+      if(error.message.includes("duplicate")){
+        throw new HttpException("El nombre de usuario o email ya existen", 400)
       }
-      throw new InternalServerErrorException("Error updating user")      
+      throw new Error      
     }
 
   }
