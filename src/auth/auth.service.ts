@@ -31,7 +31,6 @@ export class AuthService {
                     permisos: user.permiso?.tabla
                 }
                 const accessToken = await this.jwtService.signAsync(tokenPayload);
-
                 return {
                     accessToken: accessToken,
                     // userId: user.id,

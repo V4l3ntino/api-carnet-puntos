@@ -1,6 +1,8 @@
 import { IsBoolean, IsString } from "class-validator"
 
 export class CreateTablaDto {
+    @IsString()
+    id: string
 
     @IsString()
     tipo: string

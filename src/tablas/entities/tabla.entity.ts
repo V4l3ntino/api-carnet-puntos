@@ -4,7 +4,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryColumn, Primary
 @Entity('Tablas')
 export class Tabla {
     
-    @PrimaryGeneratedColumn()
+    @PrimaryColumn()
     id: string
 
     @Column()

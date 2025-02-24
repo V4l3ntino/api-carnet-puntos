@@ -1,3 +1,4 @@
+import { forwardRef, Inject } from "@nestjs/common";
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import {Server, Socket} from 'socket.io'
 import { AlumnoProfileService } from "src/alumno_profile/alumno_profile.service";
@@ -9,7 +10,7 @@ import { TipoIncidenciaService } from "src/tipo_incidencia/tipo_incidencia.servi
 
 @WebSocketGateway({
     cors: {
-      origin: 'http://localhost:3001', // URL del frontend
+      origin: '*', // URL del frontend
       methods: ['GET', 'POST'], // Métodos permitidos
       credentials: true, // Si necesitas cookies o autenticación
     },
@@ -19,6 +20,7 @@ export class WebsocketsGateway implements OnGatewayConnection, OnGatewayDisconne
     server: Server;
 
     constructor(
+        @Inject(forwardRef(() => IncidenciaService))
         private readonly incidenciaService: IncidenciaService,
         private readonly profesorService: ProfesorProfileService,
         private readonly alumnoService: AlumnoProfileService,
@@ -77,6 +79,16 @@ export class WebsocketsGateway implements OnGatewayConnection, OnGatewayDisconne
     async getAlumnos(@ConnectedSocket() client: Socket) {
         const alumnos = await this.alumnoService.findAll();
         client.emit('alumnosList', alumnos); 
+    }
+
+
+
+    incidenciasEmit(data: Incidencia){
+        this.server.emit("incidencia", data)
+    }
+
+    incidenciasDelete(id: string){
+        this.server.emit("incidenciaDelete", id)
     }
 
 

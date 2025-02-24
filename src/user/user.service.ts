@@ -77,7 +77,8 @@ export class UserService {
         'adminProfile',
         'profesorProfile',
         'alumnoProfile',
-        'permiso'
+        'permiso',
+        'permiso.tabla'
       ]})
     } catch (error) {
       console.log(error)
@@ -87,7 +88,7 @@ export class UserService {
 
   async findOne(id: string): Promise<User> {
     try {
-      const user = await this.uRepository.findOne({where:{ id }, relations: ['profile', 'adminProfile', 'profesorProfile', 'alumnoProfile', 'permiso']});
+      const user = await this.uRepository.findOne({where:{ id }, relations: ['profile', 'adminProfile', 'profesorProfile', 'alumnoProfile', 'permiso', 'permiso.tabla']});
       if (!user) {
         throw new NotFoundException('User not found');
       }
@@ -120,7 +121,7 @@ export class UserService {
 
   async update(id: string, updateUserDto: UpdateUserDto) {
     try {
-      const user = await this.uRepository.findOne({where:{ id }, relations: ['profile']});
+      const user = await this.uRepository.findOne({where:{ id }, relations: ['profile', 'permiso', 'permiso.tabla']});
       if (!user) {
         throw new NotFoundException('User not found');
       }
@@ -145,7 +146,7 @@ export class UserService {
         permisos: user.permiso?.tabla
       }
       const accessToken = await this.jwtService.signAsync(tokenPayload);
-
+      console.log(accessToken)
     return {
         accessToken: accessToken,
     }

@@ -45,11 +45,11 @@ export class PermisosService {
   }
 
   findAll() {
-    return this.permRepository.find()
+    return this.permRepository.find({relations: ['tabla']})
   }
 
   findOne(id: string) {
-    return this.permRepository.findOne({where: {id}})
+    return this.permRepository.findOne({where: {id}, relations: ['tabla']})
   }
 
   update(id: number, updatePermisoDto: UpdatePermisoDto) {

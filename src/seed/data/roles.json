@@ -5,6 +5,7 @@
         "descripcion": "Rol por defecto cuando un usuario se registra",
         "tablas": [
             {
+                "id": "0",
                 "tipo": "r",
                 "admin_profile": false,
                 "alumno_profile": false,
@@ -22,6 +23,7 @@
                 "user": false
             },
             {
+                "id": "1",
                 "tipo": "w",
                 "admin_profile": false,
                 "alumno_profile": false,
@@ -39,6 +41,7 @@
                 "user": false
             },
             {
+                "id": "2",
                 "tipo": "i",
                 "admin_profile": false,
                 "alumno_profile": false,
@@ -56,6 +59,7 @@
                 "user": false
             },
             {
+                "id": "3",
                 "tipo": "d",
                 "admin_profile": false,
                 "alumno_profile": false,
@@ -80,6 +84,7 @@
         "descripcion": "Administrador del sistema",
         "tablas": [
             {
+                "id": "4",
                 "tipo": "r",
                 "admin_profile": true,
                 "alumno_profile": true,
@@ -97,6 +102,7 @@
                 "user": true
             },
             {
+                "id": "5",
                 "tipo": "w",
                 "admin_profile": true,
                 "alumno_profile": true,
@@ -114,6 +120,7 @@
                 "user": true
             },
             {
+                "id": "6",
                 "tipo": "i",
                 "admin_profile": true,
                 "alumno_profile": true,
@@ -131,6 +138,7 @@
                 "user": true
             },
             {
+                "id": "7",
                 "tipo": "d",
                 "admin_profile": true,
                 "alumno_profile": true,
@@ -155,6 +163,7 @@
         "descripcion": "Permiso para los profesores",
         "tablas": [
             {
+                "id": "8",
                 "tipo": "r",
                 "admin_profile": false,
                 "alumno_profile": true,
@@ -172,6 +181,7 @@
                 "user": true
             },
             {
+                "id": "9",
                 "tipo": "w",
                 "admin_profile": false,
                 "alumno_profile": false,
@@ -189,6 +199,7 @@
                 "user": false
             },
             {
+                "id": "10",
                 "tipo": "i",
                 "admin_profile": false,
                 "alumno_profile": false,
@@ -206,6 +217,7 @@
                 "user": false
             },
             {
+                "id": "11",
                 "tipo": "d",
                 "admin_profile": false,
                 "alumno_profile": false,
@@ -230,6 +242,7 @@
         "descripcion": "Permiso para los alumnos",
         "tablas": [
             {
+                "id": "12",
                 "tipo": "r",
                 "admin_profile": false,
                 "alumno_profile": false,
@@ -247,6 +260,7 @@
                 "user": false
             },
             {
+                "id": "13",
                 "tipo": "w",
                 "admin_profile": false,
                 "alumno_profile": false,
@@ -264,6 +278,7 @@
                 "user": false
             },
             {
+                "id": "14",
                 "tipo": "i",
                 "admin_profile": false,
                 "alumno_profile": false,
@@ -281,6 +296,7 @@
                 "user": false
             },
             {
+                "id": "15",
                 "tipo": "d",
                 "admin_profile": false,
                 "alumno_profile": false,
