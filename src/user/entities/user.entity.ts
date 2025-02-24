@@ -8,33 +8,44 @@ import { ProfesorProfile } from "src/profesor_profile/entities/profesor_profile.
 import { Profile } from "src/profile/entities/profile.entity";
 import { TipoIncidencia } from "src/tipo_incidencia/entities/tipo_incidencia.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Field, ObjectType } from "@nestjs/graphql";
 
+@ObjectType()
 @Entity('User')
 export class User {
-    
+
+    @Field()
     @PrimaryColumn()
     id: string;
 
+    @Field()
     @Column({length: 15, unique: true})
     username: string;
+
+    @Field()
     @Column()
     password: string;
 
+    @Field()
     @Column({unique: true, nullable: true, default: null})
     email: string;
 
+    @Field()
     @Column()
     created_at: string
 
+    @Field(() => Profile)
     @OneToOne(() => Profile, (profile) => profile.user)
     profile: Profile
-
+    
     @OneToOne(() => AdminProfile, (adminProfile) => adminProfile.user)
     adminProfile: AdminProfile
 
+    @Field(() => ProfesorProfile, { nullable: true })
     @OneToOne(() => ProfesorProfile, (profesorProfile) => profesorProfile.user)
     profesorProfile: ProfesorProfile
 
+    @Field(() => AlumnoProfile, { nullable: true })
     @OneToOne(() => AlumnoProfile, (alumnoProfile) => alumnoProfile.user)
     alumnoProfile: AlumnoProfile
 
@@ -50,6 +61,7 @@ export class User {
     @OneToMany(() => Incidencia, (incidencia) => incidencia.user)
     incidencia: Incidencia[]
 
+    @Field(() => Permiso)
     @ManyToOne(() => Permiso, (permiso) => permiso.user, { onDelete: "SET NULL" })
     @JoinColumn()
     permiso: Permiso

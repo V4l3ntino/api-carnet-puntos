@@ -1,13 +1,17 @@
-import { Type } from "class-transformer"
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsNumberString, IsString, ValidateNested } from "class-validator"
-import { CreateTablaDto } from "src/tablas/dto/create-tabla.dto"
-
+import { IsNumberString, IsString } from "class-validator"
+import { Field, InputType } from "@nestjs/graphql";
+@InputType() 
 export class CreateProfesorProfileDto {
+    @Field()
+    
     @IsString()
     id: string
+    
+    @Field()
     @IsString()
     materia: string
-
+    
+    @Field()
     @IsNumberString()
     grupo_id: string
 

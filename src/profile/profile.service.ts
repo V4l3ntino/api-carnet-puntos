@@ -41,12 +41,12 @@ export class ProfileService {
   }
 
   async findAll() {
-    return await this.pRepository.find();
+    return await this.pRepository.find({relations:['user']});
   }
 
   async findOne(ida: string) {
     try {
-      const profile = await this.pRepository.findOneBy({ida})
+      const profile = await this.pRepository.findOne({where:{ida}, relations:['user']})
       if(!profile){
         throw new NotFoundException('Profile not found')
       }
