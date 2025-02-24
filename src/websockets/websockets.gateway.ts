@@ -81,6 +81,13 @@ export class WebsocketsGateway implements OnGatewayConnection, OnGatewayDisconne
         client.emit('alumnosList', alumnos); 
     }
 
+    @SubscribeMessage('aplicarRoles')
+    async aplicarRoles(@ConnectedSocket() client: Socket){
+        console.log("recibido")
+        // console.log(INCIDENCIAS)
+        client.broadcast.emit('updateToken')
+    }
+
 
 
     incidenciasEmit(data: Incidencia){
