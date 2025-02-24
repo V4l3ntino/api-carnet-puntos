@@ -126,9 +126,24 @@ export class UserService {
         throw new NotFoundException('User not found');
       }
       // Object.assign(user, updateUserDto)
-      const { email,fullName,username } = updateUserDto
-      user.email = email
-      user.username = username
+      const { email,fullName,username, rolId } = updateUserDto
+      
+      if(email){
+        user.email = email
+      }
+      
+      if(username){
+        user.username = username
+      }
+
+      
+      if(rolId){
+        const rol = await this.permisoService.findOne(rolId)
+        user.permiso = rol
+        console.log("nuevo rol",rolId)
+      }
+
+      
       await this.uRepository.save(user);
       const profile:CreateProfileDto = {
         userId: user.id,
