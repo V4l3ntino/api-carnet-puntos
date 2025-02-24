@@ -18,7 +18,7 @@ export class PermisosService {
   
   async create(createPermisoDto: CreatePermisoDto) {
     try {
-      const {id, tablas, descripcion, nombre} = createPermisoDto
+      const {id, tabla: tablas, descripcion, nombre} = createPermisoDto
       const permiso = new Permiso()
       permiso.id = id
       permiso.descripcion = descripcion

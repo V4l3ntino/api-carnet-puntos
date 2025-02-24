@@ -16,5 +16,5 @@ export class CreatePermisoDto {
     @Type(() => CreateTablaDto) //Transorma cada objeto a una instancia de CreateTablaDto
     @ArrayMinSize(4)
     @ArrayMaxSize(4)
-    tablas: CreateTablaDto[]
+    tabla: CreateTablaDto[]
 }

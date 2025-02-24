@@ -3,7 +3,7 @@
         "id": "0",
         "nombre": "Sin rol",
         "descripcion": "Rol por defecto cuando un usuario se registra",
-        "tablas": [
+        "tabla": [
             {
                 "id": "0",
                 "tipo": "r",
@@ -82,7 +82,7 @@
         "id": "1",
         "nombre": "admin",
         "descripcion": "Administrador del sistema",
-        "tablas": [
+        "tabla": [
             {
                 "id": "4",
                 "tipo": "r",
@@ -161,7 +161,7 @@
         "id": "2",
         "nombre": "profesor",
         "descripcion": "Permiso para los profesores",
-        "tablas": [
+        "tabla": [
             {
                 "id": "8",
                 "tipo": "r",
@@ -240,7 +240,7 @@
         "id": "3",
         "nombre": "alumno",
         "descripcion": "Permiso para los alumnos",
-        "tablas": [
+        "tabla": [
             {
                 "id": "12",
                 "tipo": "r",
