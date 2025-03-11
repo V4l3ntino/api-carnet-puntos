@@ -35,7 +35,7 @@ export class AlumnoProfile {
     // @JoinColumn()
     // permiso: Permiso
 
-    @Field(() => Incidencia, { nullable: true })
+    @Field(() => [Incidencia], { nullable: true })
     @OneToMany(() => Incidencia, (incidencia) => incidencia.alumnoProfile)
     incidencia: Incidencia[]
     

@@ -108,7 +108,7 @@ export class SeedService {
         const profesores = await this.insertProfesors()
         const grados = await this.insertGrados()
         const tipoIncidencias = await this.inserTiposIncidencias()
-        const incdiencias = await this.insertIncdiencias()
+        // const incdiencias = await this.insertIncdiencias()
         const profiles = await this.insertProfiles()
 
         return {
@@ -120,7 +120,7 @@ export class SeedService {
             profesores,
             grados,
             tipoIncidencias,
-            incdiencias,
+            // incdiencias,
             profiles
         }
     }
