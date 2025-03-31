@@ -35,6 +35,13 @@ export class WebsocketsGateway implements OnGatewayConnection, OnGatewayDisconne
         console.log(`Client disconnect: ${client.id}`)
     }
 
+    @SubscribeMessage('joinCompany')
+    handleJoinCompany(@ConnectedSocket() client: Socket, @MessageBody() payload: { companyId: string }): void {
+    client.join(payload.companyId.toLowerCase());
+    const rooms = Array.from(this.server.sockets.adapter.rooms.keys());
+    console.log('Listado de rooms:', rooms);
+}
+
     @SubscribeMessage('mensaje')
     handleMessage(@ConnectedSocket() client: Socket, @MessageBody() data: any){
         console.log(data)
@@ -97,6 +104,26 @@ export class WebsocketsGateway implements OnGatewayConnection, OnGatewayDisconne
     incidenciasDelete(id: string){
         this.server.emit("incidenciaDelete", id)
     }
+
+    emitPost(pool: string){
+        this.server.sockets.adapter.rooms.forEach((_, room) => {
+            if(room.startsWith(pool)){
+                console.log('EMITIENDO A LA ROOM', pool);
+                console.log('Room:', room, 'Clientes:', this.server.sockets.adapter.rooms.get(room).size);
+                this.server.to(room).emit('createOrUpdate');
+            }
+        });
+    }
+    emitDelete(body: any){
+        this.server.sockets.adapter.rooms.forEach((_, room) => {
+            if(room.startsWith(body?.poolName?.toLowerCase())){
+                console.log('EMITIENDO A LA ROOM', body?.poolName);
+                console.log('Room:', room, 'Clientes:', this.server.sockets.adapter.rooms.get(room).size);
+                this.server.to(room).emit('delete', body?.user);
+            }
+        });
+    }
+
 
 
 }
