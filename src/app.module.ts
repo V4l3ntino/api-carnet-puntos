@@ -22,6 +22,7 @@ import { SeedModule } from './seed/seed.module';
 import { GateWayModule } from './websockets/websockets.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { UserSocketModule } from './user_socket/user_socket.module';
 
 @Module({
   imports: [
@@ -55,7 +56,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
     RetrasosModule,
     PermisosModule,
     AuthModule,
-    SeedModule
+    SeedModule,
+    UserSocketModule,
   ],
   controllers: [AppController],
   providers: [AppService],

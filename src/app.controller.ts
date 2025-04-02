@@ -8,6 +8,8 @@ export class AppController {
   @Post(':pool')
   emitPost(@Param('pool') pool: string, @Body() body: any): void {    
     if(process.env.API_AUTH_TOKEN === body?.token){
+      console.log('PETICION RECIBIDA')
+
       this.appService.emitPost(pool.toLocaleLowerCase());
     }
       else

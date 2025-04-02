@@ -7,6 +7,8 @@ import { Incidencia } from "src/incidencia/entities/incidencia.entity";
 import { IncidenciaService } from "src/incidencia/incidencia.service";
 import { ProfesorProfileService } from "src/profesor_profile/profesor_profile.service";
 import { TipoIncidenciaService } from "src/tipo_incidencia/tipo_incidencia.service";
+import { CreateUserSocketDto } from "src/user_socket/dto/create-user_socket.dto";
+import { UserSocketService } from "src/user_socket/user_socket.service";
 
 @WebSocketGateway({
     cors: {
@@ -18,29 +20,65 @@ import { TipoIncidenciaService } from "src/tipo_incidencia/tipo_incidencia.servi
 export class WebsocketsGateway implements OnGatewayConnection, OnGatewayDisconnect{
     @WebSocketServer()
     server: Server;
-
+    
+    private roomSet: Set<string> = new Set<string>();
     constructor(
         @Inject(forwardRef(() => IncidenciaService))
         private readonly incidenciaService: IncidenciaService,
         private readonly profesorService: ProfesorProfileService,
         private readonly alumnoService: AlumnoProfileService,
-        private readonly tipoIncidenciaService: TipoIncidenciaService
+        private readonly tipoIncidenciaService: TipoIncidenciaService,
+        private readonly userSocketService: UserSocketService,
     ) {}
 
-    handleConnection(client: Socket) {
+    async handleConnection(client: Socket) {
         console.log(`Client connected: ${client.id}`)
+        if(client.handshake.query.userapp){
+            const userapp = typeof client.handshake.query.userapp === 'string' ? JSON.parse(client.handshake.query.userapp) : {};
+            const userSocketid = `${userapp.company || client.id}_${userapp.email || `user`}`
+            client.join(`userappcompany: ${userapp.company || 0}`)
+            const rooms = Array.from(this.server.sockets.adapter.rooms.keys());
+            console.log('Listado de rooms:', rooms);
+            const userSocket = await this.userSocketService.findOne(userSocketid)
+            if(userSocket){
+                if(userSocket.changesQuantity > 0){
+                    client.emit('changesQuantity', userSocket.changesQuantity)
+                    return
+                }
+            }
+
+            const userSocketNew: CreateUserSocketDto = {
+                id: userSocketid,
+                company: userapp.company || 0,
+                changesQuantity: 0
+            }
+            console.log('USUARIO NUEVO ', userSocketNew)
+            this.userSocketService.create(userSocketNew)
+            return
+        }
+        if(client.handshake.query.pool){
+            const pool = client.handshake.query.pool
+            if (typeof pool === 'string') {
+                client.join(pool.toLowerCase());
+                this.roomSet.add(pool.toLowerCase());
+            }
+            const rooms = Array.from(this.server.sockets.adapter.rooms.keys());
+            console.log('Listado de rooms:', this.roomSet);
+        }
     }
 
     handleDisconnect(client: Socket) {
         console.log(`Client disconnect: ${client.id}`)
     }
 
-    @SubscribeMessage('joinCompany')
-    handleJoinCompany(@ConnectedSocket() client: Socket, @MessageBody() payload: { companyId: string }): void {
-    client.join(payload.companyId.toLowerCase());
-    const rooms = Array.from(this.server.sockets.adapter.rooms.keys());
-    console.log('Listado de rooms:', rooms);
-}
+    @SubscribeMessage('dataIsReloaded')
+    handleJoinCompany(@ConnectedSocket() client: Socket, @MessageBody() userSocketId: string): void {
+        const userSocket = this.userSocketService.findOne(userSocketId);
+        userSocket.then((userSocket) => {
+            userSocket.changesQuantity = 0;
+            this.userSocketService.update(userSocketId, userSocket);
+    })
+    }
 
     @SubscribeMessage('mensaje')
     handleMessage(@ConnectedSocket() client: Socket, @MessageBody() data: any){
@@ -105,21 +143,35 @@ export class WebsocketsGateway implements OnGatewayConnection, OnGatewayDisconne
         this.server.emit("incidenciaDelete", id)
     }
 
-    emitPost(pool: string){
-        this.server.sockets.adapter.rooms.forEach((_, room) => {
-            if(room.startsWith(pool)){
-                console.log('EMITIENDO A LA ROOM', pool);
-                console.log('Room:', room, 'Clientes:', this.server.sockets.adapter.rooms.get(room).size);
+    async emitPost(poolName: string){
+        const company = poolName.split('.')[0]
+        this.server.to(`userappcompany: ${company}`).emit('changesApp')
+        const userSocketList = await this.userSocketService.findAllWhereCompany(+company)
+        userSocketList.forEach(user => {
+            user.changesQuantity += 1;
+            this.userSocketService.update(user.id, user);
+        });
+        this.roomSet.forEach((_, room) => {
+            if(room.startsWith(poolName.toLowerCase())){
+                console.log('EMITIENDO A LA ROOM', poolName);
                 this.server.to(room).emit('createOrUpdate');
+                return
             }
         });
     }
-    emitDelete(body: any){
-        this.server.sockets.adapter.rooms.forEach((_, room) => {
+    async emitDelete(body: any){
+        const company = body?.poolName.split('.')[0]
+        this.server.to(`userappcompany: ${company}`).emit('changesApp')
+        const userSocketList = await this.userSocketService.findAllWhereCompany(+company)
+        userSocketList.forEach(user => {
+            user.changesQuantity += 1;
+            this.userSocketService.update(user.id, user);
+        });
+        this.roomSet.forEach((_, room) => {
             if(room.startsWith(body?.poolName?.toLowerCase())){
                 console.log('EMITIENDO A LA ROOM', body?.poolName);
-                console.log('Room:', room, 'Clientes:', this.server.sockets.adapter.rooms.get(room).size);
                 this.server.to(room).emit('delete', body?.user);
+                return
             }
         });
     }
