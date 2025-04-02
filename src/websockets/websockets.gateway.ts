@@ -22,6 +22,7 @@ export class WebsocketsGateway implements OnGatewayConnection, OnGatewayDisconne
     server: Server;
     
     private roomSet: Set<string> = new Set<string>();
+    private app_paths_list: String[] = ['recommendation_new', 'task_planner_new', 'task_new', 'dynamicforms/template', 'plantation/optimization', 'visit', 'access']
     constructor(
         @Inject(forwardRef(() => IncidenciaService))
         private readonly incidenciaService: IncidenciaService,
@@ -145,12 +146,16 @@ export class WebsocketsGateway implements OnGatewayConnection, OnGatewayDisconne
 
     async emitPost(poolName: string){
         const company = poolName.split('.')[0]
-        this.server.to(`userappcompany: ${company}`).emit('changesApp')
-        const userSocketList = await this.userSocketService.findAllWhereCompany(+company)
-        userSocketList.forEach(user => {
-            user.changesQuantity += 1;
-            this.userSocketService.update(user.id, user);
-        });
+        const pathRequest = poolName.split('.')[1]
+        if(this.app_paths_list.some(path => path.includes(pathRequest))){
+            console.log('EMITIENDO CAMBIOS EN APP')
+            this.server.to(`userappcompany: ${company}`).emit('changesApp')
+            const userSocketList = await this.userSocketService.findAllWhereCompany(+company)
+            userSocketList.forEach(user => {
+                user.changesQuantity += 1;
+                this.userSocketService.update(user.id, user);
+            });
+        }
         this.roomSet.forEach((_, room) => {
             if(room.startsWith(poolName.toLowerCase())){
                 console.log('EMITIENDO A LA ROOM', poolName);
@@ -161,12 +166,16 @@ export class WebsocketsGateway implements OnGatewayConnection, OnGatewayDisconne
     }
     async emitDelete(body: any){
         const company = body?.poolName.split('.')[0]
-        this.server.to(`userappcompany: ${company}`).emit('changesApp')
-        const userSocketList = await this.userSocketService.findAllWhereCompany(+company)
-        userSocketList.forEach(user => {
-            user.changesQuantity += 1;
-            this.userSocketService.update(user.id, user);
-        });
+        const pathRequest = body?.poolName.split('.')[1]
+        if(this.app_paths_list.some(path => path.includes(pathRequest))){
+            console.log('EMITIENDO CAMBIOS EN APP')
+            this.server.to(`userappcompany: ${company}`).emit('changesApp')
+            const userSocketList = await this.userSocketService.findAllWhereCompany(+company)
+            userSocketList.forEach(user => {
+                user.changesQuantity += 1;
+                this.userSocketService.update(user.id, user);
+            });
+        }
         this.roomSet.forEach((_, room) => {
             if(room.startsWith(body?.poolName?.toLowerCase())){
                 console.log('EMITIENDO A LA ROOM', body?.poolName);
