@@ -6,7 +6,7 @@ import { AlumnoProfileModule } from "src/alumno_profile/alumno_profile.module";
 import { TipoIncidenciaModule } from "src/tipo_incidencia/tipo_incidencia.module";
 
 @Module({
-    imports: [forwardRef(() => IncidenciaModule), ProfesorProfileModule, AlumnoProfileModule, TipoIncidenciaModule],
+    imports: [forwardRef(() => IncidenciaModule), ProfesorProfileModule, AlumnoProfileModule, forwardRef(() => TipoIncidenciaModule)],
     providers: [WebsocketsGateway],
     exports: [WebsocketsGateway]
 })

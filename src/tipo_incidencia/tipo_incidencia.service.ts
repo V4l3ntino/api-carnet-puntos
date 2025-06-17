@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateTipoIncidenciaDto } from './dto/create-tipo_incidencia.dto';
 import { UpdateTipoIncidenciaDto } from './dto/update-tipo_incidencia.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { UserService } from 'src/user/user.service';
 import { GradoService } from 'src/grado/grado.service';
 import { getDateNow, newMessage } from 'functions/functions';
+import { WebsocketsGateway } from 'src/websockets/websockets.gateway';
 
 @Injectable()
 export class TipoIncidenciaService {
@@ -15,7 +16,9 @@ export class TipoIncidenciaService {
     @InjectRepository(TipoIncidencia)
     private readonly tiRepository: Repository<TipoIncidencia>,
     private readonly userService: UserService,
-    private readonly gradoService: GradoService
+    private readonly gradoService: GradoService,
+    @Inject(forwardRef(() => WebsocketsGateway))
+    private readonly webSocket: WebsocketsGateway     
   ){}
 
   async create(createTipoIncidenciaDto: CreateTipoIncidenciaDto) {
@@ -37,6 +40,9 @@ export class TipoIncidenciaService {
 
       this.tiRepository.save(tipoIncidencia)
 
+      //Comunico a los demás clientes
+      this.webSocket.tipoincidenciasEmit(tipoIncidencia)
+
       return newMessage('success', 200)
     } catch (error) {
       return error
@@ -56,6 +62,8 @@ export class TipoIncidenciaService {
   }
 
   remove(id: string) {
-    return this.tiRepository.delete(id)
+    const result = this.tiRepository.delete(id)
+    this.webSocket.tipoincidenciasDelete(id)
+    return result
   }
 }

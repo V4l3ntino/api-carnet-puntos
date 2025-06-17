@@ -6,6 +6,7 @@ import { CreateIncidenciaDto } from "src/incidencia/dto/create-incidencia.dto";
 import { Incidencia } from "src/incidencia/entities/incidencia.entity";
 import { IncidenciaService } from "src/incidencia/incidencia.service";
 import { ProfesorProfileService } from "src/profesor_profile/profesor_profile.service";
+import { TipoIncidencia } from "src/tipo_incidencia/entities/tipo_incidencia.entity";
 import { TipoIncidenciaService } from "src/tipo_incidencia/tipo_incidencia.service";
 
 @WebSocketGateway({
@@ -24,6 +25,7 @@ export class WebsocketsGateway implements OnGatewayConnection, OnGatewayDisconne
         private readonly incidenciaService: IncidenciaService,
         private readonly profesorService: ProfesorProfileService,
         private readonly alumnoService: AlumnoProfileService,
+        @Inject(forwardRef(() => TipoIncidenciaService))
         private readonly tipoIncidenciaService: TipoIncidenciaService
     ) {}
 
@@ -93,10 +95,17 @@ export class WebsocketsGateway implements OnGatewayConnection, OnGatewayDisconne
     incidenciasEmit(data: Incidencia){
         this.server.emit("incidencia", data)
     }
-
+    
     incidenciasDelete(id: string){
         this.server.emit("incidenciaDelete", id)
     }
-
+    
+    tipoincidenciasEmit(data: TipoIncidencia){
+        this.server.emit("tipoincidencia", data)
+    }
+    
+    tipoincidenciasDelete(id: string){
+        this.server.emit("tipoincidenciaDelete", id)
+    }
 
 }
